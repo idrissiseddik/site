@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Vidéos YouTube</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Hauteur de la page fixe */
+            overflow: hidden; /* Empêche le défilement de la page */
+        }
+        h1 {
+            color: #343a40;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Ombre pour le titre */
+        }
+        .video-container {
+            height: 500px; /* Hauteur de la vidéo agrandie */
+            width: 500px; /* Largeur de la vidéo pour le format carré agrandi */
+            margin: 20px auto; /* Centre la vidéo */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Ombre autour de la vidéo */
+            border-radius: 8px; /* Coins arrondis */
+            overflow: hidden; /* Cache tout débordement */
+            background-color: #ffffff; /* Fond blanc pour la vidéo */
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: 0; /* Pas de bordure autour de l'iframe */
+        }
+        .open-list-button {
+            display: block; /* Affiche le bouton comme un bloc */
+            margin: 0 auto; /* Centre le bouton */
+            padding: 10px 20px; /* Espacement à l'intérieur du bouton */
+            background-color: #007bff; /* Couleur de fond du bouton */
+            color: white; /* Couleur du texte du bouton */
+            border: none; /* Pas de bordure */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Curseur en main */
+            transition: background-color 0.3s; /* Effet de transition */
+        }
+        .open-list-button:hover {
+            background-color: #0056b3; /* Couleur au survol */
+        }
+        /* Style pour la modale */
+        .modal {
+            display: none; /* Cachée par défaut */
+            position: fixed; /* Reste en place */
+            z-index: 1; /* Au-dessus des autres éléments */
+            left: 0;
+            top: 0;
+            width: 100%; /* Largeur complète */
+            height: 100%; /* Hauteur complète */
+            overflow: auto; /* Ajoute une barre de défilement si nécessaire */
+            background-color: rgba(0,0,0,0.8); /* Couleur de fond avec transparence */
+        }
+        .modal-content {
+            position: relative;
+            margin: 10% auto; /* Marge de 10% du haut et centré */
+            padding: 0;
+            width: 90%; /* Largeur de la modale */
+            max-width: 600px; /* Largeur maximale */
+            background-color: #fff; /* Fond blanc pour la modale */
+            border-radius: 8px; /* Coins arrondis */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre autour de la modale */
+        }
+        .close {
+            color: #aaa; /* Couleur du bouton de fermeture */
+            float: right; /* À droite */
+            font-size: 28px; /* Taille de la police */
+            font-weight: bold;
+            margin: 10px; /* Espacement autour du bouton */
+        }
+        .close:hover,
+        .close:focus {
+            color: #000; /* Change la couleur au survol */
+            text-decoration: none;
+            cursor: pointer; /* Curseur en main */
+        }
+        /* Liste des vidéos dans la modale */
+        .video-list {
+            max-height: 300px; /* Hauteur maximale de la liste */
+            overflow-y: auto; /* Défilement vertical dans la liste */
+            padding: 10px; /* Espacement à l'intérieur de la liste */
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0; /* Supprimer les marges par défaut */
+        }
+        li {
+            margin: 10px 0;
+            transition: transform 0.3s; /* Animation de transformation */
+        }
+        li:hover {
+            transform: scale(1.02); /* Agrandissement au survol */
+        }
+        a {
+            text-decoration: none;
+            color: #007bff; /* Couleur des liens */
+            display: block; /* Permet de cliquer sur toute la zone du lien */
+            padding: 10px; /* Padding pour le lien */
+            border-radius: 5px; /* Coins arrondis */
+            background-color: #f8f9fa; /* Fond clair pour les liens */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre autour des liens */
+            transition: background-color 0.3s, box-shadow 0.3s; /* Effets de transition */
+        }
+        a:hover {
+            background-color: #e2e6ea; /* Couleur de fond au survol */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Ombre au survol */
+        }
+
+        /* Styles pour la barre de défilement */
+        .video-list::-webkit-scrollbar {
+            width: 10px; /* Largeur de la barre de défilement */
+        }
+
+        .video-list::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Couleur de la piste */
+            border-radius: 10px; /* Coins arrondis pour la piste */
+        }
+
+        .video-list::-webkit-scrollbar-thumb {
+            background: #007bff; /* Couleur de la barre de défilement */
+            border-radius: 10px; /* Coins arrondis pour la barre */
+        }
+
+        .video-list::-webkit-scrollbar-thumb:hover {
+            background: #0056b3; /* Couleur au survol */
+        }
+    </style>
+</head>
+<body>
+    <h1>Mes Vidéos YouTube</h1>
+    <div class="video-container">
+        <iframe id="videoFrame" src="https://www.youtube.com/embed/UThmnTvDTY0?autoplay=1&rel=0" allowfullscreen></iframe>
+    </div>
+    <button class="open-list-button" onclick="openModal()">Ouvrir la liste des vidéos</button>
+
+    <!-- La modale -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 style="text-align: center; margin: 10px 0;">Liste des Vidéos</h2> <!-- Titre de la liste -->
+            <div class="video-list">
+                <ul>
+                    <li><a href="#" onclick="playVideo('https://www.youtube.com/embed/UThmnTvDTY0?autoplay=1&rel=0')">Pour essayer</a></li>
+                    <li><a href="#" onclick="playVideo('https://www.youtube.com/embed/ADgdVfY9Q_U?autoplay=1&rel=0')">Titre de la Vidéo 2</a></li>
+                    <li><a href="#" onclick="playVideo('https://www.youtube.com/embed/lupZ-7ZaiWk?autoplay=1&rel=0')">Vidés excel - Cours</a></li>
+                    <li><a href="#" onclick="playVideo('https://www.youtube.com/embed/VIDEO_ID_4?autoplay=1&rel=0')">Titre de la Vidéo 4</a></li>
+                    <li><a href="#" onclick="playVideo('https://www.youtube.com/embed/VIDEO_ID_5?autoplay=1&rel=0')">Titre de la Vidéo 5</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById("myModal").style.display = "block"; // Ouvre la modale
+        }
+
+        function closeModal() {
+            document.getElementById("myModal").style.display = "none"; // Ferme la modale
+        }
+
+        function playVideo(videoUrl) {
+            document.getElementById("videoFrame").src = videoUrl; // Change la source de la vidéo avec autoplay et rel=0
+            closeModal(); // Ferme la modale
+        }
+
+        // Ferme la modale si l'utilisateur clique en dehors de celle-ci
+        window.onclick = function(event) {
+            const modal = document.getElementById("myModal");
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
