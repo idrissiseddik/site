@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire WhatsApp</title>
+</head>
+<body>
+    <h1>Envoyer un message sur WhatsApp</h1>
+    <form id="whatsappForm">
+        <label for="name">Nom:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required></textarea><br><br>
+
+        <button type="submit">Envoyer</button>
+    </form>
+
+    <script>
+        document.getElementById('whatsappForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+
+            // Encode les données pour l'URL
+            const encodedName = encodeURIComponent(name);
+            const encodedMessage = encodeURIComponent(message);
+
+            // Remplacez 'votre_numero' par le numéro de téléphone au format international
+            const whatsappUrl = `https://wa.me/+212666396938?text=Nom:%20${encodedName}%0AMessage:%20${encodedMessage}`;
+
+            // Ouvrir WhatsApp
+            window.open(whatsappUrl);
+        });
+    </script>
+</body>
+</html>
