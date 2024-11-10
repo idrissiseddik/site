@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horloge et Date Stylisée</title>
+    <style>
+        /* Style général */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            color: #ffffff;
+        }
+
+        /* Conteneur de la carte */
+        #clock-container {
+            width: 400px;
+            padding: 20px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        /* Style de la date */
+        #date {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Style de l'heure */
+        #clock {
+            font-size: 3.5em;
+            font-weight: bold;
+            color: #f0f8ff;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            letter-spacing: 2px;
+        }
+
+        /* Animation de fondu */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div id="clock-container">
+        <div id="date">01 janvier 2024</div>
+        <div id="clock">00:00:00</div>
+    </div>
+
+    <script>
+        function updateClock() {
+            const now = new Date();
+
+            // Format de la date
+            const day = String(now.getDate()).padStart(2, '0');
+            const monthNames = ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"];
+            const month = monthNames[now.getMonth()];
+            const year = now.getFullYear();
+            const formattedDate = `${day} ${month} ${year}`;
+            
+            // Format de l'heure
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const formattedTime = `${hours}:${minutes}:${seconds}`;
+
+            // Affichage de la date et de l'heure
+            document.getElementById('date').textContent = formattedDate;
+            document.getElementById('clock').textContent = formattedTime;
+        }
+
+        // Mettre à jour l'horloge chaque seconde
+        setInterval(updateClock, 1000);
+        updateClock(); // Appel initial pour afficher l'heure immédiatement
+    </script>
+</body>
+</html>
