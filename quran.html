@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إذاعات القرآن الكريم</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+      flex-direction: column;
+    }
+
+    .audio-player {
+      background: #1c1c1c;
+      padding: 20px;
+      border-radius: 15px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s ease;
+    }
+
+    .audio-player:hover {
+      transform: scale(1.05);
+    }
+
+    .audio-player h2 {
+      font-size: 1.6em;
+      margin-bottom: 15px;
+      color: #50C878;
+    }
+
+    .reciteur-list {
+      margin-bottom: 20px;
+    }
+
+    .reciteur-list select {
+      background: #333;
+      border: none;
+      color: #fff;
+      font-size: 1.1em;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .reciteur-list select:hover {
+      background: #50C878;
+    }
+
+    .reciteur-name {
+      font-size: 1.1em;
+      margin-top: 10px;
+      color: #50C878;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .controls button {
+      background: #333;
+      border: none;
+      color: #fff;
+      font-size: 1.5em;
+      padding: 10px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .controls button:hover {
+      background: #50C878;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background: #444;
+      border-radius: 5px;
+      margin-top: 15px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .progress {
+      height: 100%;
+      background: #50C878;
+      width: 0%;
+      border-radius: 5px;
+      transition: width 0.3s;
+    }
+
+    .time-display {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9em;
+      color: #bbb;
+      margin-top: 10px;
+    }
+
+    .volume-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+    }
+
+    .volume-container i {
+      margin-right: 10px;
+    }
+
+    .volume-container input {
+      width: 100px;
+      margin-left: 10px;
+    }
+
+    /* Animation de la barre de progression */
+    @keyframes progressAnimation {
+      0% {
+        width: 0%;
+      }
+      100% {
+        width: 100%;
+      }
+    }
+
+    /* Styles pour le footer */
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #121212; /* Couleur de fond identique à la page */
+      color: #FFFACD; /* Couleur jaune claire */
+      text-align: center;
+      padding: 15px;
+      font-size: 1.1em;
+      font-family: 'Arial', sans-serif;
+    }
+
+    footer a {
+      color: #FFFACD;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="audio-player">
+    <h2>إذاعات القرآن الكريم</h2>
+
+    <!-- Liste des réciteurs -->
+    <div class="reciteur-list">
+      <select id="reciteur-select" onchange="changeReciteur()">
+        <option value="https://backup.qurango.net/radio/saad_alghamdi">اذاعة سعد الغامدي</option>
+        <option value="https://backup.qurango.net/radio/abdulrahman_alsudaes">إذاعة عبد الرحمن السديس</option>
+        <option value="https://backup.qurango.net/radio/omar_alqazabri">إذاعة عمر القزابري</option>
+        <option value="https://backup.qurango.net/radio/aloyoon_alkoshi">إذاعة العيون الكوشي</option>
+      </select>
+    </div>
+
+    <!-- Affichage du nom du réciteur -->
+    <div class="reciteur-name" id="reciteur-name">Réciteur 1</div>
+
+    <audio id="audio" preload="metadata">
+      <source id="audio-source" src="reciteur1.mp3" type="audio/mp3">
+    </audio>
+
+    <div class="controls">
+      <button id="previous-btn"><i class="fas fa-step-backward"></i></button>
+      <button id="playPauseBtn"><i class="fas fa-play"></i></button>
+      <button id="next-btn"><i class="fas fa-step-forward"></i></button>
+    </div>
+
+    <div class="progress-container" onclick="seekAudio(event)">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="time-display">
+      <span id="current-time">00:00</span>
+      <span id="total-time">00:00</span>
+    </div>
+
+    <div class="volume-container">
+      <i class="fas fa-volume-up"></i>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="1" oninput="adjustVolume(event)">
+    </div>
+  </div>
+
+  <footer>
+    تم تطويره من طرف : م.الصديق الإدريسي <br>
+    لا تنسونا من صالح دعائكم و لكم بالمثل 
+  </footer>
+
+  <script>
+    const audio = document.getElementById('audio');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const progress = document.getElementById('progress');
+    const currentTimeDisplay = document.getElementById('current-time');
+    const totalTimeDisplay = document.getElementById('total-time');
+    const volumeSlider = document.getElementById('volume');
+    const reciteurNameDisplay = document.getElementById('reciteur-name');
+
+    // Play/Pause function
+    playPauseBtn.addEventListener('click', togglePlayPause);
+
+    function togglePlayPause() {
+      if (audio.paused) {
+        audio.play();
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      } else {
+        audio.pause();
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+      }
+    }
+
+    // Update the progress bar
+    audio.addEventListener('timeupdate', function() {
+      const progressPercent = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = progressPercent + '%';
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
+      totalTimeDisplay.textContent = formatTime(audio.duration);
+    });
+
+    // Format time (MM:SS)
+    function formatTime(seconds) {
+      let minutes = Math.floor(seconds / 60);
+      let remainingSeconds = Math.floor(seconds % 60);
+      return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    // Seek function
+    function seekAudio(event) {
+      const width = event.target.offsetWidth;
+      const offsetX = event.offsetX;
+      const newTime = (offsetX / width) * audio.duration;
+      audio.currentTime = newTime;
+    }
+
+    // Volume control
+    function adjustVolume(event) {
+      audio.volume = event.target.value;
+    }
+
+    // Change reciteur
+    function changeReciteur() {
+      const reciteur = document.getElementById('reciteur-select').value;
+      const audioSource = document.getElementById('audio-source');
+      audioSource.src = reciteur;
+      audio.load();
+      audio.play();
+      playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+      
+      // Mise à jour du nom du réciteur affiché
+      const selectedReciteurName = document.getElementById('reciteur-select').options[document.getElementById('reciteur-select').selectedIndex].text;
+      reciteurNameDisplay.textContent = selectedReciteurName;
+    }
+
+    // Optional: Add functionality for previous and next buttons
+    document.getElementById('previous-btn').addEventListener('click', function() {
+      // Your previous track functionality here
+    });
+
+    document.getElementById('next-btn').addEventListener('click', function() {
+      // Your next track functionality here
+    });
+  </script>
+</body>
+</html>
