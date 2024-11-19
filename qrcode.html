@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de QR Code</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            position: relative;
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 60%;
+            max-width: 400px;
+            margin: 10px 0;
+            display: block; /* Force l'élément à occuper une ligne */
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #qrcode {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+        footer {
+            padding: 10px;
+            background-color: #f5f5f5; /* Même couleur que le fond */
+            color: #4CAF50;
+            text-align: center;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            border-top: 1px solid #ddd;
+        }
+        #message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            border-radius: 8px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Générateur de QR Code</h1>
+    <input type="text" id="text" placeholder="Entrez votre texte ici">
+    <button onclick="generateQRCode()">Générer le QR Code</button>
+
+    <div id="qrcode"></div>
+
+    <div id="message">Créé par M.Seddik Elidrissi</div>
+
+    <footer>
+        Créé par M.Seddik Elidrissi
+    </footer>
+
+    <script>
+        document.addEventListener("contextmenu", function (e) {
+            const inputField = document.getElementById("text");
+
+            // Vérifie si le clic droit est fait sur le champ de texte
+            if (e.target === inputField) {
+                return; // Autorise le menu contextuel pour le champ de texte
+            }
+
+            // Empêche le menu contextuel par défaut pour le reste de la page
+            e.preventDefault();
+
+            // Affiche le message au centre de la page
+            const message = document.getElementById("message");
+            message.style.display = "block";
+
+            // Cache le message après 2 secondes
+            setTimeout(() => {
+                message.style.display = "none";
+            }, 2000);
+        });
+
+        function generateQRCode() {
+            const text = document.getElementById("text").value;
+            const qrcodeContainer = document.getElementById("qrcode");
+            qrcodeContainer.innerHTML = ""; // Efface les anciens QR Codes
+            if (text) {
+                QRCode.toCanvas(text, { width: 200 }, function (error, canvas) {
+                    if (error) {
+                        console.error(error);
+                        alert("Une erreur s'est produite lors de la génération du QR Code.");
+                    } else {
+                        qrcodeContainer.appendChild(canvas);
+                    }
+                });
+            } else {
+                alert("Veuillez entrer un texte !");
+            }
+        }
+    </script>
+</body>
+</html>
