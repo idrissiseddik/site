@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio et Contact WhatsApp</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+            height: 700px; /* Augmenté pour s'assurer que tout s'affiche */
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1), 0 6px 30px rgba(0, 0, 0, 0.15);
+            text-align: center;
+            border: 2px solid #25d366;
+            border-top: 10px solid #128c7e;
+            background: linear-gradient(135deg, #f0f9ff, #d4e7f7);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        /* Assurez-vous que le lecteur audio est bien visible */
+        audio {
+            width: 100%;
+            margin-top: 20px;
+            margin-bottom: 20px;  /* Ajouter un espace sous le lecteur audio */
+            border-radius: 5px;
+            box-sizing: border-box;  /* Garantir que les marges n'affectent pas la taille */
+        }
+
+        .form-container {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        input, textarea {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #25d366;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #128c7e;
+        }
+
+        .footer {
+            font-size: 14px;
+            color: #777;
+            margin-top: 10px;
+        }
+
+        .radio-name {
+            margin-top: 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff5733;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            margin-top: 40px; /* Ajouter de la marge pour descendre un peu plus */
+        }
+
+        /* Centrer l'icône SVG */
+        .radio-icon {
+            width: 120px; /* Agrandir la largeur */
+            height: 120px; /* Agrandir la hauteur */
+            margin: 0 auto;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        /* Style pour l'espace de publicité */
+        .advertisement-space {
+            background-color: #f0f9ff;
+            border: 2px dashed #128c7e;
+            padding: 10px;
+            margin-bottom: 30px; /* Augmenter la marge en bas */
+            font-size: 14px;
+            color: #333;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .advertisement-space:hover {
+            background-color: #d4e7f7;
+            border-color: #25d366;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Icône SVG de la radio -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="radio-icon" fill="#128c7e">
+            <rect x="10" y="25" width="80" height="50" rx="10" ry="10" fill="#128c7e"/>
+            <rect x="15" y="30" width="70" height="30" fill="white"/>
+            <line x1="50" y1="10" x2="50" y2="25" stroke="#128c7e" stroke-width="3"/>
+            <circle cx="50" cy="10" r="3" fill="#128c7e"/>
+            <circle cx="25" cy="60" r="5" fill="white"/>
+            <circle cx="75" cy="60" r="5" fill="white"/>
+            <circle cx="50" cy="45" r="8" fill="none" stroke="#128c7e" stroke-width="2"/>
+        </svg>
+
+        <div class="title">Écoutez votre radio préférée</div>
+
+        <!-- Radio Player -->
+        <select id="radio-select">
+            <option value="" disabled selected>Sélectionnez une radio</option>
+            <option value="https://live.medi1.com/medi1" data-name="Medi 1">Medi 1</option>
+            <option value="https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3" data-name="Hit Radio">Hit Radio</option>
+            <option value="https://url-to-radio-stream-3" data-name="Radio 3">Radio 3</option>
+            <option value="https://url-to-radio-stream-4" data-name="Radio 4">Radio 4</option>
+        </select>
+
+        <audio id="radio-player" controls>
+            <source id="radio-source" src="" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Display the selected radio name -->
+        <div id="radio-name" class="radio-name"></div>
+
+        <!-- Espace pour ajouter la publicité -->
+        <a href="http://idrissiseddik.github.io/quran" target="_blank">
+            <div class="advertisement-space">
+                Ajoutez ici votre publicité !
+            </div>
+        </a>
+
+        <!-- Contact Form -->
+        <div class="form-container">
+            <h3>Contactez-nous via WhatsApp</h3>
+            <form id="whatsapp-form" onsubmit="sendMessage(event)">
+                <input type="text" id="name" placeholder="Votre Nom" required>
+                <textarea id="message" placeholder="Votre Message" required></textarea>
+                <button type="submit">Envoyer via WhatsApp</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <p>Site créé par M.Seddik Elidrissi</p>
+        </div>
+    </div>
+
+    <script>
+        // Function to change the radio station and display its name
+        const radioSelect = document.getElementById('radio-select');
+        const radioPlayer = document.getElementById('radio-player');
+        const radioSource = document.getElementById('radio-source');
+        const radioNameDisplay = document.getElementById('radio-name');
+
+        radioSelect.addEventListener('change', function() {
+            const selectedOption = radioSelect.options[radioSelect.selectedIndex];
+            radioSource.src = selectedOption.value;
+            radioPlayer.load();
+            radioPlayer.play();
+            
+            // Display the name of the selected radio station
+            radioNameDisplay.textContent = `Vous écoutez la Radio: ${selectedOption.getAttribute('data-name')}`;
+        });
+
+        // Function to send WhatsApp message
+        function sendMessage(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const message = document.getElementById('message').value;
+            const whatsappUrl = `https://wa.me/212608975435?text=Nom:%20${encodeURIComponent(name)}%0AMessage:%20${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+    </script>
+
+</body>
+</html>
