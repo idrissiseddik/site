@@ -14,12 +14,12 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow-y: hidden; /* Cacher la barre de défilement */
         }
 
         .container {
-            width: 100%;
+            width: 90%;
             max-width: 450px;
-            height: 700px; /* Augmenté pour s'assurer que tout s'affiche */
             background-color: #fff;
             padding: 20px;
             border-radius: 15px;
@@ -34,8 +34,8 @@
         }
 
         .title {
-            font-size: 24px;
-            margin-bottom: 20px;
+            font-size: 22px; /* Légèrement plus petit */
+            margin-bottom: 15px;
             color: #333;
         }
 
@@ -47,19 +47,69 @@
             border-radius: 5px;
         }
 
-        /* Assurez-vous que le lecteur audio est bien visible */
-        audio {
+        .audio-player-container {
             width: 100%;
-            margin-top: 20px;
-            margin-bottom: 20px;  /* Ajouter un espace sous le lecteur audio */
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .audio-player {
+            width: 100%;
+            height: 40px; /* Réduire encore la hauteur du lecteur */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #128c7e;
+            border-radius: 8px;
+            padding: 5px; /* Réduire la marge interne */
+            position: relative;
+            color: white;
+        }
+
+        .audio-player button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px; /* Réduire la taille du bouton */
+            cursor: pointer;
+            margin: 0 5px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 3px; /* Réduire encore la hauteur de la barre de progression */
+            background-color: #ccc;
             border-radius: 5px;
-            box-sizing: border-box;  /* Garantir que les marges n'affectent pas la taille */
+            position: absolute;
+            bottom: 8px; /* Ajuster la position */
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0;
+            background-color: #25d366;
+            border-radius: 5px;
+        }
+
+        .volume-container {
+            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        .volume-container input {
+            width: 80%;
         }
 
         .form-container {
-            margin-top: 20px;
+            margin-top: 10px; /* Réduire l'espace */
             background-color: #f9f9f9;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             display: flex;
@@ -80,10 +130,10 @@
             background-color: #25d366;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 18px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         button:hover {
@@ -97,31 +147,28 @@
         }
 
         .radio-name {
-            margin-top: 30px;
-            font-size: 18px;
+            margin-top: 20px;
+            font-size: 16px; /* Plus petit */
             font-weight: bold;
             color: #ff5733;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            margin-top: 40px; /* Ajouter de la marge pour descendre un peu plus */
         }
 
-        /* Centrer l'icône SVG */
         .radio-icon {
-            width: 120px; /* Agrandir la largeur */
-            height: 120px; /* Agrandir la hauteur */
+            width: 60px;  /* Taille réduite de l'icône */
+            height: 60px;  /* Taille réduite de l'icône */
             margin: 0 auto;
             display: block;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        /* Style pour l'espace de publicité */
         .advertisement-space {
             background-color: #f0f9ff;
             border: 2px dashed #128c7e;
-            padding: 10px;
-            margin-bottom: 30px; /* Augmenter la marge en bas */
-            font-size: 14px;
+            padding: 8px;
+            margin-bottom: 20px;
+            font-size: 12px;
             color: #333;
             font-weight: bold;
             text-align: center;
@@ -137,7 +184,6 @@
 <body>
 
     <div class="container">
-        <!-- Icône SVG de la radio -->
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" class="radio-icon" fill="#128c7e">
             <rect x="10" y="25" width="80" height="50" rx="10" ry="10" fill="#128c7e"/>
             <rect x="15" y="30" width="70" height="30" fill="white"/>
@@ -150,31 +196,36 @@
 
         <div class="title">Écoutez votre radio préférée</div>
 
-        <!-- Radio Player -->
         <select id="radio-select">
             <option value="" disabled selected>Sélectionnez une radio</option>
             <option value="https://live.medi1.com/medi1" data-name="Medi 1">Medi 1</option>
-            <option value="https://hitradio-maroc.ice.infomaniak.ch/hitradio-maroc-128.mp3" data-name="Hit Radio">Hit Radio</option>
+            <option value="https://url-to-radio-stream-2" data-name="Radio 2">Radio 2</option>
             <option value="https://url-to-radio-stream-3" data-name="Radio 3">Radio 3</option>
             <option value="https://url-to-radio-stream-4" data-name="Radio 4">Radio 4</option>
         </select>
 
-        <audio id="radio-player" controls>
-            <source id="radio-source" src="" type="audio/mp3">
-            Your browser does not support the audio element.
-        </audio>
+        <div class="audio-player-container">
+            <div class="audio-player">
+                <button id="playPauseBtn">▶️</button>
+                <div class="progress-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+            </div>
 
-        <!-- Display the selected radio name -->
-        <div id="radio-name" class="radio-name"></div>
+            <div class="volume-container">
+                <label for="volumeControl">Volume</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="1">
+            </div>
+        </div>
 
-        <!-- Espace pour ajouter la publicité -->
+        <div id="radio-message" class="radio-name">Vous écoutez la Radio: </div>
+
         <a href="http://idrissiseddik.github.io/quran" target="_blank">
             <div class="advertisement-space">
                 Ajoutez ici votre publicité !
             </div>
         </a>
 
-        <!-- Contact Form -->
         <div class="form-container">
             <h3>Contactez-nous via WhatsApp</h3>
             <form id="whatsapp-form" onsubmit="sendMessage(event)">
@@ -190,29 +241,57 @@
     </div>
 
     <script>
-        // Function to change the radio station and display its name
+        const radioPlayer = new Audio();
+        const playPauseBtn = document.getElementById('playPauseBtn');
         const radioSelect = document.getElementById('radio-select');
-        const radioPlayer = document.getElementById('radio-player');
-        const radioSource = document.getElementById('radio-source');
+        const progressBar = document.getElementById('progressBar');
+        const volumeControl = document.getElementById('volumeControl');
         const radioNameDisplay = document.getElementById('radio-name');
+        const radioMessage = document.getElementById('radio-message');
+        let isPlaying = false;
+
+        radioMessage.textContent = "Vous écoutez la Radio: "; 
 
         radioSelect.addEventListener('change', function() {
             const selectedOption = radioSelect.options[radioSelect.selectedIndex];
-            radioSource.src = selectedOption.value;
-            radioPlayer.load();
+            radioPlayer.src = selectedOption.value;
+            radioMessage.textContent = `Vous écoutez la Radio: ${selectedOption.getAttribute('data-name')}`; 
             radioPlayer.play();
-            
-            // Display the name of the selected radio station
-            radioNameDisplay.textContent = `Vous écoutez la Radio: ${selectedOption.getAttribute('data-name')}`;
+            playPauseBtn.textContent = '⏸️';
+            isPlaying = true;
         });
 
-        // Function to send WhatsApp message
+        playPauseBtn.addEventListener('click', function() {
+            if (isPlaying) {
+                radioPlayer.pause();
+                playPauseBtn.textContent = '▶️';
+            } else {
+                radioPlayer.play();
+                playPauseBtn.textContent = '⏸️';
+            }
+            isPlaying = !isPlaying;
+        });
+
+        radioPlayer.addEventListener('timeupdate', function() {
+            const progress = (radioPlayer.currentTime / radioPlayer.duration) * 100;
+            progressBar.style.width = `${progress}%`;
+        });
+
+        radioPlayer.addEventListener('ended', function() {
+            isPlaying = false;
+            playPauseBtn.textContent = '▶️';
+        });
+
+        volumeControl.addEventListener('input', function() {
+            radioPlayer.volume = volumeControl.value;
+        });
+
         function sendMessage(event) {
             event.preventDefault();
             const name = document.getElementById('name').value;
             const message = document.getElementById('message').value;
-            const whatsappUrl = `https://wa.me/212608975435?text=Nom:%20${encodeURIComponent(name)}%0AMessage:%20${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
+            const url = `https://wa.me/212608975435?text=Nom:%20${name}%0AMessage:%20${message}`;
+            window.open(url, '_blank');
         }
     </script>
 
