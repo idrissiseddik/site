@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Sociétés & ICE</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #0f0f12;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .main-card {
+            background: #16161a;
+            border: 1px solid #24242b;
+            border-radius: 16px;
+            padding: 35px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-control, .form-control:focus {
+            background-color: #22222b;
+            border-color: #2d2d38;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .form-control:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        .input-group-text {
+            background-color: #22222b;
+            border-color: #2d2d38;
+            color: #64748b;
+        }
+
+        .btn-primary {
+            background-color: #2563eb;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-1px);
+        }
+
+        .btn-nav {
+            background-color: #1e293b;
+            border: 1px solid #334155;
+            color: #94a3b8;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-nav:hover {
+            background-color: #334155;
+            color: #fff;
+        }
+
+        .modal-content {
+            background-color: #16161a !important;
+            border: 1px solid #2d2d38 !important;
+            border-radius: 16px;
+            color: #e2e8f0 !important;
+        }
+
+        .modal-header, .modal-footer {
+            border-color: #2d2d38 !important;
+        }
+
+        .table-custom {
+            color: #cbd5e1 !important;
+            margin-bottom: 0;
+            background-color: #16161a !important;
+        }
+
+        .table-custom th, .table-custom td {
+            background-color: #16161a !important;
+            color: #e2e8f0 !important;
+            border-bottom: 1px solid #24242b !important;
+            vertical-align: middle;
+            padding: 14px 12px;
+        }
+
+        .table-custom th {
+            background-color: #111114 !important;
+            color: #94a3b8 !important;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+
+        .table-custom tbody tr:hover td {
+            background-color: #1f1f26 !important;
+        }
+
+        code {
+            background-color: #1e1b4b;
+            color: #818cf8;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- CARTE PRINCIPALE -->
+<div class="main-card">
+    <div class="text-center mb-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary rounded-circle mb-3" style="width: 60px; height: 60px;">
+            <i class="fa-solid fa-building fa-2x"></i>
+        </div>
+        <h4 class="m-0 text-white">Nouvelle Entreprise</h4>
+        <p class="text-muted small mt-1">Enregistrez et gerez vos fiches societes simplement</p>
+    </div>
+
+    <form id="addForm">
+        <div class="mb-3">
+            <label class="form-label text-muted small fw-bold">Nom de la Societe</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-signature"></i></span>
+                <input type="text" id="addNom" class="form-control" placeholder="Ex: Rocket Tech SARL" required>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="form-label text-muted small fw-bold">Numero ICE (15 chiffres)</label>
+            <div class="input-group">
+                <span class="input-group-text"><i class="fa-solid fa-fingerprint"></i></span>
+                <input type="text" id="addICE" class="form-control" placeholder="Ex: 001234567000089" maxlength="15" required>
+            </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary w-100 mb-3" id="addBtn">
+            <i class="fa-solid fa-plus me-2"></i>Ajouter la societe
+        </button>
+        
+        <div class="row g-2">
+            <div class="col-6">
+                <button type="button" class="btn btn-nav w-100" onclick="openSearchModal()">
+                    <i class="fa-solid fa-magnifying-glass me-2 text-info"></i>Rechercher
+                </button>
+            </div>
+            <div class="col-6">
+                <button type="button" class="btn btn-nav w-100" onclick="openDirectoryModal()">
+                    <i class="fa-solid fa-folder-open me-2 text-primary"></i>Repertoire
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- MODAL 1 : ESPACE DE RECHERCHE -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white"><i class="fa-solid fa-magnifying-glass me-2 text-info"></i>Rechercher une Societe</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <label class="form-label text-muted small fw-bold">Tapez le nom ou le numero ICE</label>
+                    <div class="input-group">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Entrez votre recherche ici...">
+                        <button class="btn btn-primary px-4" type="button" id="searchButton" onclick="triggerSearch()">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Nom de la Societe</th>
+                                <th>ICE</th>
+                                <th class="text-end" style="width: 100px;">Copie</th>
+                            </tr>
+                        </thead>
+                        <tbody id="searchTableBody">
+                            <tr>
+                                <td colspan="3" class="text-center py-3 text-muted">Saisissez un critere et cliquez sur la loupe pour rechercher.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 2 : REPERTOIRE GLOBAL -->
+<div class="modal fade" id="directoryModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white"><i class="fa-solid fa-folder-open me-2 text-primary"></i>Liste Globale des Societes</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-custom">
+                        <thead>
+                            <tr>
+                                <th>Nom de la Societe</th>
+                                <th>ICE</th>
+                                <th class="text-end" style="width: 140px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="directoryTableBody">
+                            <tr>
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    <span class="spinner-border spinner-border-sm me-2"></span>Chargement du repertoire...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL 3 : FORMULAIRE DE MODIFICATION -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true" style="background: rgba(0,0,0,0.7);">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-warning"><i class="fa-solid fa-pen-to-square me-2"></i>Modifier la Fiche</h5>
+                <button type="button" class="btn-close btn-close-white" onclick="closeEditModal()"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm">
+                    <input type="hidden" id="editID">
+                    <div class="mb-3">
+                        <label class="form-label text-muted small fw-bold">Nom de la Societe</label>
+                        <input type="text" id="editNom" class="form-control" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-muted small fw-bold">Numero ICE (15 chiffres)</label>
+                        <input type="text" id="editICE" class="form-control" maxlength="15" required>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-secondary me-2" onclick="closeEditModal()">Annuler</button>
+                        <button type="submit" class="btn btn-warning text-dark fw-bold" id="editBtn">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap & SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // METS TON URL ICI
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzor5xUC9kDzcN8K07V-Z84PqejaOnqzDspbMaYHYfERROth7Kaone5WxvY92RGUypQvQ/exec";
+    let allSocietes = []; 
+    
+    const bsSearchModal = new bootstrap.Modal(document.getElementById('searchModal'));
+    const bsDirectoryModal = new bootstrap.Modal(document.getElementById('directoryModal'));
+    const bsEditModal = new bootstrap.Modal(document.getElementById('editModal'));
+
+    document.addEventListener("DOMContentLoaded", fetchLatestData);
+
+    function fetchLatestData(callback) {
+        fetch(SCRIPT_URL)
+        .then(response => response.json())
+        .then(data => { 
+            allSocietes = data; 
+            if(callback) callback();
+        })
+        .catch(err => console.error("Erreur de synchronisation :", err));
+    }
+
+    // --- FONCTION DE VALIDATION DE L'ICE ---
+    function isValidICE(ice) {
+        // Retourne vrai uniquement si l'ICE contient exactement 15 caractères et uniquement des chiffres
+        const iceRegex = /^\d{15}$/;
+        return iceRegex.test(ice);
+    }
+
+    // --- LOGIQUE RECHERCHE ---
+    function openSearchModal() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('searchTableBody').innerHTML = `<tr><td colspan="3" class="text-center py-3 text-muted">Saisissez un critere et cliquez sur la loupe pour rechercher.</td></tr>`;
+        bsSearchModal.show();
+        fetchLatestData();
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            triggerSearch();
+        }
+    });
+
+    document.getElementById('searchInput').addEventListener('input', function() {
+        triggerSearch();
+    });
+
+    function triggerSearch() {
+        const text = document.getElementById('searchInput').value.toLowerCase().trim();
+        const tbody = document.getElementById('searchTableBody');
+
+        if(text === '') {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-3 text-muted">Saisissez un critere et cliquez sur la loupe pour rechercher.</td></tr>`;
+            return;
+        }
+
+        const filtered = allSocietes.filter(soc => {
+            const nom = soc.NomSociete ? String(soc.NomSociete).toLowerCase() : '';
+            const ice = soc.ICE ? String(soc.ICE).toLowerCase() : '';
+            return nom.includes(text) || ice.includes(text);
+        });
+
+        if(filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-3 text-muted">Aucun resultat trouve.</td></tr>`;
+            return;
+        }
+
+        let html = '';
+        filtered.forEach(soc => {
+            const cleanNom = (soc.NomSociete || '').replace(/'/g, "\\'");
+            const cleanICE = soc.ICE || '';
+            html += `
+                <tr>
+                    <td class="fw-semibold text-white">${soc.NomSociete || ''}</td>
+                    <td><code>${cleanICE}</code></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-info" onclick="copyToClipboard('${cleanNom}', '${cleanICE}')" title="Copier le profil">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // --- LOGIQUE REPERTOIRE ---
+    function openDirectoryModal() {
+        buildDirectoryTable();
+        bsDirectoryModal.show();
+        fetchLatestData(() => { buildDirectoryTable(); });
+    }
+
+    function buildDirectoryTable() {
+        const tbody = document.getElementById('directoryTableBody');
+        if(!allSocietes || allSocietes.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-muted">Aucune societe enregistree.</td></tr>`;
+            return;
+        }
+        
+        let html = '';
+        allSocietes.forEach(soc => {
+            const cleanNom = (soc.NomSociete || '').replace(/'/g, "\\'");
+            const cleanICE = soc.ICE || '';
+            html += `
+                <tr>
+                    <td class="fw-semibold text-white">${soc.NomSociete || ''}</td>
+                    <td><code>${cleanICE}</code></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-link text-info me-1" onclick="copyToClipboard('${cleanNom}', '${cleanICE}')" title="Copier">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                        <button class="btn btn-sm btn-link text-warning me-1" onclick="openEditModal('${soc.ID}', '${cleanNom}', '${cleanICE}')" title="Modifier">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </button>
+                        <button class="btn btn-sm btn-link text-danger" onclick="deleteSociete('${soc.ID}')" title="Supprimer">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+        tbody.innerHTML = html;
+    }
+
+    // --- COPIER DANS LE PRESSE-PAPIER ---
+    function copyToClipboard(nom, ice) {
+        const textToCopy = `Nom : ${nom} - ICE : ${ice}`;
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Copie !',
+                text: 'Profil copie dans le presse-papiers.',
+                timer: 1000,
+                showConfirmButton: false,
+                background: '#16161a',
+                color: '#fff'
+            });
+        }).catch(err => {
+            console.error('Erreur de copie :', err);
+        });
+    }
+
+    // --- ACTION : AJOUTER (AVEC VALIDATION D'ICE) ---
+    document.getElementById('addForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const iceInput = document.getElementById('addICE').value.trim();
+        const btn = document.getElementById('addBtn');
+
+        // Blocage si l'ICE n'est pas valide
+        if (!isValidICE(iceInput)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Format ICE invalide',
+                text: 'Le numéro ICE doit contenir exactement 15 chiffres, sans lettres ni espaces.',
+                background: '#16161a',
+                color: '#fff',
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
+
+        btn.disabled = true;
+
+        const payload = {
+            action: "insert",
+            NomSociete: document.getElementById('addNom').value,
+            ICE: iceInput
+        };
+
+        sendData(payload, () => {
+            document.getElementById('addForm').reset();
+            btn.disabled = false;
+        }, false);
+    });
+
+    // --- ACTION : MODIFIER (AVEC VALIDATION D'ICE) ---
+    function openEditModal(id, nom, ice) {
+        document.getElementById('editID').value = id;
+        document.getElementById('editNom').value = nom;
+        document.getElementById('editICE').value = ice;
+        bsEditModal.show();
+    }
+
+    function closeEditModal() {
+        bsEditModal.hide();
+    }
+
+    document.getElementById('editForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const iceInput = document.getElementById('editICE').value.trim();
+        const btn = document.getElementById('editBtn');
+
+        // Blocage si l'ICE modifié n'est pas valide
+        if (!isValidICE(iceInput)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Format ICE invalide',
+                text: 'Le numéro ICE doit contenir exactement 15 chiffres, sans lettres ni espaces.',
+                background: '#16161a',
+                color: '#fff',
+                confirmButtonColor: '#2563eb'
+            });
+            return;
+        }
+
+        btn.disabled = true;
+
+        const payload = {
+            action: "update",
+            ID: document.getElementById('editID').value,
+            NomSociete: document.getElementById('editNom').value,
+            ICE: iceInput
+        };
+
+        sendData(payload, () => {
+            bsEditModal.hide();
+            btn.disabled = false;
+        }, true);
+    });
+
+    // --- ACTION : SUPPRIMER ---
+    function deleteSociete(id) {
+        Swal.fire({
+            title: 'Supprimer cette societe ?',
+            text: "L'element sera definitivement retire de la base de donnees.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#4b5563',
+            confirmButtonText: 'Confirmer',
+            cancelButtonText: 'Annuler',
+            background: '#16161a',
+            color: '#fff'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                sendData({ action: "delete", ID: id }, null, true);
+            }
+        });
+    }
+
+    // --- ENVOI DES DONNEES ---
+    function sendData(payload, successCallback, shouldRefreshDirectory) {
+        Swal.fire({
+            title: 'Synchronisation...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); },
+            background: '#16161a',
+            color: '#fff'
+        });
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(() => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Base de donnees mise a jour',
+                timer: 1500,
+                showConfirmButton: false,
+                background: '#16161a',
+                color: '#fff'
+            });
+            
+            if(successCallback) successCallback();
+            
+            fetchLatestData(() => {
+                if(shouldRefreshDirectory) {
+                    buildDirectoryTable();
+                }
+            });
+        })
+        .catch(err => {
+            console.error(err);
+            Swal.fire({ icon: 'error', title: 'Erreur reseau', text: 'Impossible de joindre Google Sheets.', background: '#16161a', color: '#fff' });
+        });
+    }
+</script>
+</body>
+</html>
