@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maroc - Coupe du Monde 2026</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <style>
+        /* Thème Premium Dark */
+        body {
+            background-color: #0b0f19;
+            color: #f8f9fa;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            padding-top: 158px; 
+            padding-bottom: 70px; 
+        }
+
+        /* Header Fixe Compact et Centré */
+        .hero-header {
+            background: linear-gradient(135deg, #8b0000 0%, #111827 100%);
+            border-bottom: 3px solid #006233;
+            padding: 8px 15px; 
+            text-align: center;
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            z-index: 1030;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .header-logo img {
+            width: 38px; 
+            height: auto;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        /* Message Marquee placé juste en dessous du Header */
+        .welcome-marquee {
+            background-color: #006233;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 4px 0;
+            position: fixed;
+            top: 93px; 
+            left: 0;
+            width: 100%;
+            z-index: 1020;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        /* Bouton Admin */
+        .btn-admin-login {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.05);
+            color: #a0aec0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.72rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-admin-login:hover {
+            background: #8b0000;
+            color: #fff;
+            border-color: #8b0000;
+        }
+        .admin-badge {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #8b0000;
+            color: white;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* Cartes Style Glassmorphism */
+        .match-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .match-header {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.85rem;
+            color: #a0aec0;
+        }
+
+        .match-body {
+            padding: 15px 15px 10px 15px;
+        }
+
+        .team-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 35%;
+        }
+
+        .flag-img {
+            width: 55px;
+            height: 38px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            object-fit: cover;
+        }
+
+        .team-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .vs-box {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .badge-vs {
+            background: linear-gradient(135deg, #8b0000, #006233);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .countdown-timer {
+            font-size: 0.75rem;
+            margin-top: 8px;
+            color: #00ff87;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        .match-actions {
+            background: rgba(0, 0, 0, 0.15);
+            padding: 10px 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .btn-action {
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 6px 12px;
+        }
+
+        .btn-info-match {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-comment-match {
+            background: #006233;
+            color: #ffffff;
+            border: none;
+        }
+
+        /* ---------------------------------------------------- */
+        /* STRUCTURE DE L'ESPACE DISCUSSION PLEIN ÉCRAN FIGÉ    */
+        /* ---------------------------------------------------- */
+        
+        .swal2-popup-fullscreen-maroc {
+            background: linear-gradient(135deg, #8b0000 0%, #052e16 100%) !important;
+            color: #f8f9fa !important;
+            padding: 15px !important;
+            height: 100vh !important; /* Force la hauteur totale de l'écran */
+            max-width: none !important;
+            border-radius: 0 !important;
+        }
+
+        /* Supprime les marges par défaut de Swal pour maîtriser le flex */
+        .swal2-popup-fullscreen-maroc .swal2-html-container {
+            margin: 0 !important;
+            padding: 0 !important;
+            height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important; /* Empêche le popup global de scroller */
+        }
+
+        /* Zone de la liste des messages : Seule zone autorisée à scroller */
+        .comment-container-fullscreen {
+            flex-grow: 1; 
+            overflow-y: auto; /* Scrolle uniquement ici */
+            -webkit-overflow-scrolling: touch;
+            background: rgba(0, 0, 0, 0.5) !important; 
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Zone d'envoi en bas : FICHÉE, ne bouge jamais */
+        .discussion-footer-form {
+            background: rgba(11, 15, 25, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .root-comment {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+
+        .reply-comment {
+            background: rgba(0, 255, 135, 0.04);
+            border-left: 3px solid #00ff87;
+            border-radius: 0 6px 6px 0;
+            padding: 8px;
+            margin-top: 8px;
+            margin-left: 20px;
+        }
+
+        .btn-reply-link {
+            background: none;
+            border: none;
+            color: #00ff87;
+            font-size: 0.75rem;
+            padding: 0;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .admin-checkbox {
+            width: 18px;
+            height: 18px;
+            accent-color: #ff3333;
+            cursor: pointer;
+        }
+
+        .admin-bulk-bar {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+        }
+
+        .swal2-popup-fullscreen-maroc .form-control {
+            background-color: rgba(0, 0, 0, 0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: #ffffff !important;
+        }
+        .swal2-popup-fullscreen-maroc .form-control:focus {
+            border-color: #00ff87 !important;
+            box-shadow: 0 0 0 0.25rem rgba(0, 255, 135, 0.25) !important;
+        }
+
+        /* Style Popups classiques */
+        .swal2-popup-dark {
+            background: #111827 !important;
+            color: #f8f9fa !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px !important;
+            width: 95% !important;
+            max-width: 500px !important;
+        }
+
+        .swal2-html-container label {
+            color: #e2e8f0 !important;
+            font-weight: 500;
+        }
+
+        .app-footer {
+            background-color: #0b0f19;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1020;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #a0aec0;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="hero-header">
+        <div class="position-relative w-100 d-flex flex-column align-items-center justify-content-center">
+            <div class="header-logo mb-1">
+                <img src="https://flagcdn.com/w80/ma.png" alt="Maroc">
+            </div>
+            <h1 class="h5 mb-0 fw-bold text-white text-uppercase tracking-wide" style="font-size: 1.1rem; letter-spacing: 0.5px;">
+                Lions de l'Atlas
+            </h1>
+            <p class="text-muted small mb-0" style="font-size: 0.72rem; opacity: 0.85;">
+                Coupe du Monde FIFA 2026 — Groupe C
+            </p>
+            <div id="admin-zone">
+                <button class="btn-admin-login" onclick="demanderConnexionAdmin()">
+                    <i class="fa-solid fa-lock me-1"></i>Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="welcome-marquee">
+        <marquee behavior="scroll" direction="left" scrollamount="5">
+            Dima Maghrib ! Rejoignez le fil de discussion en direct et répondez aux messages des autres supporters ! 🇲🇦
+        </marquee>
+    </div>
+
+    <main class="container px-3">
+        <h2 class="h6 text-uppercase text-muted fw-bold mb-3 px-1">
+            <i class="fa-solid fa-calendar-days me-1 text-danger"></i> Calendrier de la phase de groupes
+        </h2>
+        <div id="matches-container"></div>
+    </main>
+
+    <footer class="app-footer">
+        <p class="mb-0">M. Seddik Elidrissi &copy; 2026 — Tous droits réservés</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const GOOGLE_SHEET_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9utojYkIxj1cI7Zvt3O89BoMGQy5zYe8wDVe_-Ph1lf6oOLciqpH0qwei1y9VuAtp/exec";
+
+        const matchesData = [
+            {
+                id: 1,
+                stage: "Groupe C - Match 1",
+                homeTeam: "Brésil",
+                homeFlagUrl: "https://flagcdn.com/w160/br.png", 
+                awayTeam: "Maroc",
+                awayFlagUrl: "https://flagcdn.com/w160/ma.png",  
+                dateStr: "13/06/2026",
+                timeStr: "23:00",
+                timestamp: "2026-06-13T23:00:00+01:00",
+                stadium: "MetLife Stadium",
+                city: "East Rutherford (NJ)"
+            },
+            {
+                id: 2,
+                stage: "Groupe C - Match 2",
+                homeTeam: "Écosse",
+                homeFlagUrl: "https://flagcdn.com/w160/gb-sct.png", 
+                awayTeam: "Maroc",
+                awayFlagUrl: "https://flagcdn.com/w160/ma.png",   
+                dateStr: "19/06/2026",
+                timeStr: "23:00",
+                timestamp: "2026-06-19T23:00:00+01:00",
+                stadium: "Gillette Stadium",
+                city: "Foxborough (Boston)"
+            },
+            {
+                id: 3,
+                stage: "Groupe C - Match 3",
+                homeTeam: "Maroc",
+                homeFlagUrl: "https://flagcdn.com/w160/ma.png",   
+                awayTeam: "Haïti",
+                awayFlagUrl: "https://flagcdn.com/w160/ht.png",   
+                dateStr: "24/06/2026",
+                timeStr: "23:00",
+                timestamp: "2026-06-24T23:00:00+01:00",
+                stadium: "Mercedes-Benz Stadium",
+                city: "Atlanta (Georgia)"
+            }
+        ];
+
+        let selectedParentId = "root"; 
+        let estAdmin = false; 
+
+        function verifierEnregistrementUtilisateur() {
+            const pseudoExistant = localStorage.getItem('supporter_pseudo');
+            if (!pseudoExistant) {
+                Swal.fire({
+                    title: '<span class="fs-6 text-white fw-bold">🏆 Inscription Supporter</span>',
+                    html: `
+                        <p class="text-white-50 small mb-3">Bienvenue ! Veuillez choisir un pseudo unique pour publier vos messages.</p>
+                        <label for="swal-reg-name" class="small mb-1 d-block text-start">Votre Pseudo :</label>
+                        <input id="swal-reg-name" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Ex: Ahmed_Lions">
+                    `,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    confirmButtonText: 'S\'enregistrer',
+                    confirmButtonColor: '#006233',
+                    customClass: { popup: 'swal2-popup-dark' },
+                    preConfirm: () => {
+                        const pseudo = document.getElementById('swal-reg-name').value.trim();
+                        if (!pseudo) {
+                            Swal.showValidationMessage("Le pseudo est obligatoire !");
+                            return false;
+                        }
+                        localStorage.setItem('supporter_pseudo', pseudo);
+                        return pseudo;
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Enregistré !',
+                            text: `Bienvenue parmi nous, ${result.value} !`,
+                            timer: 2000,
+                            showConfirmButton: false,
+                            customClass: { popup: 'swal2-popup-dark' }
+                        });
+                    }
+                });
+            }
+        }
+
+        function debloquerPseudo() {
+            const inputName = document.getElementById('swal-input-name');
+            const btnModif = document.getElementById('btn-modifier-pseudo');
+            if (inputName && btnModif) {
+                inputName.removeAttribute('disabled');
+                inputName.focus();
+                btnModif.classList.add('d-none');
+            }
+        }
+
+        function formaterDateISO(dateISO) {
+            if (!dateISO) return "";
+            if (typeof dateISO === 'string' && dateISO.includes('/')) return dateISO;
+            
+            const dateObj = new Date(dateISO);
+            if (isNaN(dateObj.getTime())) return dateISO; 
+
+            const jj = String(dateObj.getDate()).padStart(2, '0');
+            const mm = String(dateObj.getMonth() + 1).padStart(2, '0');
+            const aaaa = dateObj.getFullYear();
+
+            return `${jj}/${mm}/${aaaa}`;
+        }
+
+        function demanderConnexionAdmin() {
+            Swal.fire({
+                title: '<span class="fs-6 text-white fw-bold">Espace Administration</span>',
+                html: `
+                    <label for="swal-admin-pass" class="small mb-1 d-block text-start">Mot de passe requis :</label>
+                    <input type="password" id="swal-admin-pass" class="form-control form-control-sm bg-dark text-white border-secondary" placeholder="Entrez le mot de passe">
+                `,
+                showCancelButton: true,
+                confirmButtonText: 'Valider',
+                confirmButtonColor: '#8b0000',
+                cancelButtonText: 'Annuler',
+                customClass: { popup: 'swal2-popup-dark' },
+                preConfirm: () => {
+                    const pass = document.getElementById('swal-admin-pass').value;
+                    if (pass === "Seddik") {
+                        return true;
+                    } else {
+                        Swal.showValidationMessage("Mot de passe incorrect !");
+                        return false;
+                    }
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    estAdmin = true;
+                    document.getElementById('admin-zone').innerHTML = `<span class="admin-badge"><i class="fa-solid fa-user-shield me-1"></i> Admin</span>`;
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Mode Admin activé',
+                        text: 'Modération groupée par cases à cocher débloquée.',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        customClass: { popup: 'swal2-popup-dark' }
+                    });
+                }
+            });
+        }
+
+        function renderMatches() {
+            const container = document.getElementById('matches-container');
+            container.innerHTML = '';
+
+            matchesData.forEach(match => {
+                const card = document.createElement('div');
+                card.className = 'match-card';
+                card.innerHTML = `
+                    <div class="match-header d-flex justify-content-between align-items-center">
+                        <span><i class="fa-solid fa-trophy text-warning me-1"></i> ${match.stage}</span>
+                        <span><i class="fa-regular fa-clock me-1"></i> ${match.dateStr}</span>
+                    </div>
+                    <div class="match-body d-flex align-items-center justify-content-between">
+                        <div class="team-box">
+                            <img src="${match.homeFlagUrl}" alt="${match.homeTeam}" class="flag-img">
+                            <span class="team-name">${match.homeTeam}</span>
+                        </div>
+                        <div class="vs-box">
+                            <span class="badge-vs">VS</span>
+                            <div class="countdown-timer" id="timer-${match.id}">Calcul...</div>
+                        </div>
+                        <div class="team-box">
+                            <img src="${match.awayFlagUrl}" alt="${match.awayTeam}" class="flag-img">
+                            <span class="team-name">${match.awayTeam}</span>
+                        </div>
+                    </div>
+                    <div class="match-actions d-flex gap-2">
+                        <button class="btn btn-action btn-info-match flex-grow-1" onclick="showMatchDetails(${match.id})">
+                            <i class="fa-solid fa-circle-info me-1"></i> Détails
+                        </button>
+                        <button class="btn btn-action btn-comment-match flex-grow-1" onclick="openCommentsModal(${match.id})">
+                            <i class="fa-regular fa-comments me-1"></i> Commentaires
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function updateCountdowns() {
+            const now = new Date().getTime();
+            matchesData.forEach(match => {
+                const timerElement = document.getElementById(`timer-${match.id}`);
+                if (!timerElement) return;
+                const distance = new Date(match.timestamp).getTime() - now;
+                if (distance < 0) {
+                    timerElement.innerHTML = "<span class='text-secondary'>En cours / Terminé</span>";
+                } else {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    timerElement.innerHTML = days > 0 ? `J-${days} ${hours}h` : `${hours}h`;
+                }
+            });
+        }
+
+        function showMatchDetails(id) {
+            const match = matchesData.find(m => m.id === id);
+            Swal.fire({
+                title: `<span class="fs-6 text-white fw-bold">${match.homeTeam} vs ${match.awayTeam}</span>`,
+                html: `<div class="text-start mt-2 small text-white-50">
+                    <p class="mb-2"><i class="fa-solid fa-map-pin text-danger me-2"></i><strong>Stade :</strong> ${match.stadium}</p>
+                    <p class="mb-2"><i class="fa-solid fa-city text-info me-2"></i><strong>Ville :</strong> ${match.city}</p>
+                    <p class="mb-2"><i class="fa-solid fa-calendar me-2"></i><strong>Date :</strong> ${match.dateStr}</p>
+                    <p class="mb-0"><i class="fa-solid fa-clock me-2"></i><strong>Heure :</strong> ${match.timeStr} (Heure Maroc)</p>
+                </div>`,
+                confirmButtonColor: '#8b0000',
+                customClass: { popup: 'swal2-popup-dark' }
+            });
+        }
+
+        function toggleSelectAllAdmin(mainCheckbox) {
+            const checkboxes = document.querySelectorAll('.comment-select-chk');
+            checkboxes.forEach(chk => chk.checked = mainCheckbox.checked);
+        }
+
+        async function executerSuppressionGroupree(matchId) {
+            const checkedBoxes = document.querySelectorAll('.comment-select-chk:checked');
+            if (checkedBoxes.length === 0) {
+                Swal.fire({ icon: 'warning', title: 'Attention', text: 'Aucun message coché.', customClass: { popup: 'swal2-popup-dark' } });
+                return;
+            }
+
+            const idsA_Supprimer = Array.from(checkedBoxes).map(chk => chk.value);
+
+            const confirmation = await Swal.fire({
+                title: 'Confirmer la suppression ?',
+                text: `Vous allez supprimer ${idsA_Supprimer.length} message(s) sélectionné(s).`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Oui, tout supprimer',
+                cancelButtonText: 'Annuler',
+                customClass: { popup: 'swal2-popup-dark' }
+            });
+
+            if (!confirmation.isConfirmed) { return; }
+
+            Swal.fire({ title: 'Suppression en cours...', didOpen: () => { Swal.showLoading(); } });
+
+            try {
+                const urlParams = new URLSearchParams();
+                urlParams.append("action", "delete");
+                urlParams.append("commentId", idsA_Supprimer.join(",")); 
+
+                await fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                    method: "POST",
+                    body: urlParams
+                });
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                openCommentsModal(matchId); 
+            } catch (err) {
+                Swal.fire({ icon: 'error', title: 'Erreur', text: 'Action impossible.', customClass: { popup: 'swal2-popup-dark' } });
+            }
+        }
+
+        async function openCommentsModal(matchId) {
+            selectedParentId = "root"; 
+            Swal.fire({ title: 'Chargement...', didOpen: () => { Swal.showLoading(); } });
+
+            let treeHtml = '<p class="text-muted small my-5 text-center">Aucun message. Laissez un mot de soutien !</p>';
+            let bulkActionBarHtml = '';
+
+            if (estAdmin) {
+                bulkActionBarHtml = `
+                    <div class="admin-bulk-bar d-flex align-items-center justify-content-between text-start flex-shrink-0">
+                        <div class="d-flex align-items-center gap-2">
+                            <input type="checkbox" id="chk-all-admin" class="admin-checkbox" onchange="toggleSelectAllAdmin(this)">
+                            <label for="chk-all-admin" class="small text-white-50 m-0" style="cursor:pointer">Tout cocher</label>
+                        </div>
+                        <button class="btn btn-danger btn-sm py-0 px-2 fw-bold" style="font-size:0.75rem" onclick="executerSuppressionGroupree(${matchId})">
+                            <i class="fa-solid fa-trash-can me-1"></i> Supprimer la sélection
+                        </button>
+                    </div>
+                `;
+            }
+            
+            try {
+                if(GOOGLE_SHEET_SCRIPT_URL !== "") {
+                    const response = await fetch(`${GOOGLE_SHEET_SCRIPT_URL}?_cb=${Date.now()}`);
+                    const list = await response.json();
+                    const matchComments = list.filter(c => c.matchId == matchId);
+                    
+                    if(matchComments.length > 0) {
+                        treeHtml = "";
+                        const roots = matchComments.filter(c => c.parentId === "root");
+                        const replies = matchComments.filter(c => c.parentId !== "root");
+
+                        roots.forEach(root => {
+                            const dateRacineFormatee = formaterDateISO(root.date);
+                            const safeRootNom = escapeHtml(root.nom).replace(/'/g, "\\'");
+                            const chkBoxAdminRoot = estAdmin ? `<input type="checkbox" class="admin-checkbox comment-select-chk me-2 mt-1" value="${root.commentId}">` : '';
+
+                            treeHtml += `
+                                <div class="root-comment text-start">
+                                    <div class="d-flex align-items-start">
+                                        ${chkBoxAdminRoot}
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex justify-content-between" style="font-size:0.75rem;">
+                                                <strong class="text-success small">${escapeHtml(root.nom)}</strong>
+                                                <span class="text-muted" style="font-size:0.7rem;">${dateRacineFormatee}</span>
+                                            </div>
+                                            <div class="text-white-50 small mt-1">${escapeHtml(root.commentaire)}</div>
+                                            <div class="text-end mt-1">
+                                                <button class="btn-reply-link" onclick="setReplyTarget('${root.commentId}', '${safeRootNom}')">Répondre</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                            `;
+                            
+                            const subReplies = replies.filter(r => r.parentId === root.commentId);
+                            subReplies.forEach(reply => {
+                                const dateReponseFormatee = formaterDateISO(reply.date);
+                                const chkBoxAdminReply = estAdmin ? `<input type="checkbox" class="admin-checkbox comment-select-chk me-2 mt-1" value="${reply.commentId}">` : '';
+
+                                treeHtml += `
+                                    <div class="reply-comment">
+                                        <div class="d-flex align-items-start">
+                                            ${chkBoxAdminReply}
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between" style="font-size:0.72rem;">
+                                                    <strong style="color: #00ff87;">${escapeHtml(reply.nom)}</strong>
+                                                    <span class="text-muted" style="font-size:0.65rem;">${dateReponseFormatee}</span>
+                                                </div>
+                                                <div class="text-white-50 small mt-1">${escapeHtml(reply.commentaire)}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            treeHtml += `</div>`; 
+                        });
+                    }
+                }
+            } catch (e) {
+                treeHtml = '<p class="text-danger small my-5 text-center">Erreur de liaison ou aucun commentaire trouvé.</p>';
+            }
+
+            const pseudoSauvegarde = localStorage.getItem('supporter_pseudo') || '';
+            const estVerrouille = pseudoSauvegarde !== '' ? 'disabled' : '';
+            const classeBoutonModif = pseudoSauvegarde !== '' ? '' : 'd-none';
+
+            // Injection et structure stricte Flexbox pour figer les formulaires
+            Swal.fire({
+                title: `<div class="text-center w-100 flex-shrink-0 pt-2"><span class="fs-5 text-white fw-bold"><i class="fa-regular fa-comments me-2 text-warning"></i>Espace de Discussion</span></div>`,
+                grow: 'fullscreen', 
+                html: `
+                    ${bulkActionBarHtml}
+                    
+                    <div class="comment-container-fullscreen">
+                        ${treeHtml}
+                    </div>
+                    
+                    <div class="discussion-footer-form text-start flex-shrink-0">
+                        <div id="reply-indicator" class="badge bg-secondary mb-2 d-none" style="font-size:0.75rem;">
+                            En réponse à : <span id="reply-target-name"></span> 
+                            <i class="fa-solid fa-xmark ms-2" style="cursor:pointer" onclick="resetReplyTarget()"></i>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="swal-input-name" class="small text-white-50">Votre Pseudo :</label>
+                            <button id="btn-modifier-pseudo" class="btn btn-link p-0 text-info small ${classeBoutonModif}" style="font-size:0.75rem; text-decoration:none;" onclick="debloquerPseudo()">
+                                <i class="fa-solid fa-pen-to-square me-1"></i>Changer
+                            </button>
+                        </div>
+                        <input id="swal-input-name" class="form-control form-control-sm mb-2" placeholder="Ex: Ahmed" value="${pseudoSauvegarde}" ${estVerrouille}>
+                        
+                        <label for="swal-input-msg" class="small mb-1 d-block text-white-50">Votre message :</label>
+                        <textarea id="swal-input-msg" class="form-control form-control-sm" rows="2" placeholder="Votre texte ici..."></textarea>
+                    </div>
+                `,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fa-regular fa-paper-plane me-1"></i> Envoyer',
+                confirmButtonColor: '#006233',
+                cancelButtonText: 'Fermer',
+                customClass: { popup: 'swal2-popup-fullscreen-maroc' }, 
+                preConfirm: async () => {
+                    const nom = document.getElementById('swal-input-name').value.trim();
+                    const commentaire = document.getElementById('swal-input-msg').value.trim();
+                    
+                    if (!nom || !whitespaceCheck(commentaire)) {
+                        Swal.showValidationMessage("Complétez tous les champs !");
+                        return false;
+                    }
+
+                    localStorage.setItem('supporter_pseudo', nom);
+
+                    const commentId = "c_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+                    
+                    const aujourdhui = new Date();
+                    const jj = String(aujourdhui.getDate()).padStart(2, '0');
+                    const mm = String(aujourdhui.getMonth() + 1).padStart(2, '0');
+                    const aaaa = aujourdhui.getFullYear();
+                    const dateFormatee = `${jj}/${mm}/${aaaa}`;
+
+                    const urlParams = new URLSearchParams();
+                    urlParams.append("action", "add");
+                    urlParams.append("matchId", matchId);
+                    urlParams.append("commentId", commentId);
+                    urlParams.append("parentId", selectedParentId);
+                    urlParams.append("nom", nom);
+                    urlParams.append("commentaire", commentaire);
+                    urlParams.append("date", dateFormatee);
+
+                    try {
+                        await fetch(GOOGLE_SHEET_SCRIPT_URL, {
+                            method: "POST",
+                            body: urlParams
+                        });
+                        
+                        await new Promise(resolve => setTimeout(resolve, 800));
+                        return true;
+                    } catch (err) {
+                        Swal.showValidationMessage("Erreur d'enregistrement.");
+                        return false;
+                    }
+                }
+            }).then((res) => { if (res.isConfirmed) { openCommentsModal(matchId); } });
+        }
+
+        function setReplyTarget(id, name) {
+            selectedParentId = id;
+            const ind = document.getElementById('reply-indicator');
+            const tgt = document.getElementById('reply-target-name');
+            if(ind && tgt) {
+                tgt.innerText = name;
+                ind.classList.remove('d-none');
+                // Petit effet de focus automatique sur la zone de saisie textuelle
+                document.getElementById('swal-input-msg').focus();
+            }
+        }
+
+        function resetReplyTarget() {
+            selectedParentId = "root";
+            const ind = document.getElementById('reply-indicator');
+            if(ind) ind.classList.add('d-none');
+        }
+
+        function whitespaceCheck(str) {
+            return str.replace(/\s/g, '').length > 0;
+        }
+
+        function escapeHtml(t) {
+            if(!t) return '';
+            return t.toString().replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+        }
+
+        document.addEventListener('contextmenu', e => e.preventDefault());
+        document.addEventListener('DOMContentLoaded', () => { 
+            renderMatches(); 
+            updateCountdowns(); 
+            setInterval(updateCountdowns, 60000); 
+            setTimeout(verifierEnregistrementUtilisateur, 1000);
+        });
+    </script>
+</body>
+</html>
