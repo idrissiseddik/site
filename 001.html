@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Sociétés & ICE</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #0f111a;
+            color: #e2e8f0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+        }
+        .form-control {
+            background-color: rgba(15, 17, 26, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            background-color: #161925;
+            border-color: #0dcaf0;
+            box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.25);
+            color: #ffffff;
+        }
+        .table-glass {
+            color: #e2e8f0;
+        }
+        .table-glass th {
+            background-color: rgba(255, 255, 255, 0.06);
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+        }
+        .table-glass td {
+            background-color: transparent;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            vertical-align: middle;
+        }
+        .btn-cyan {
+            background-color: #0dcaf0;
+            color: #0f111a;
+            font-weight: 600;
+        }
+        .btn-cyan:hover {
+            background-color: #0baccc;
+            color: #0f111a;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-dark bg-dark mb-5 border-bottom border-secondary">
+        <div class="container">
+            <span class="navbar-brand mb-0 h1">
+                <i class="fa-solid fa-building text-info me-2"></i> Registre Cloud des Sociétés
+            </span>
+            <span class="badge bg-secondary">Base de données : Puter</span>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="row g-4">
+            
+            <div class="col-lg-4">
+                <div class="card glass-card p-4 shadow-lg text-white">
+                    <h4 id="formTitle" class="mb-4 text-info">
+                        <i class="fa-solid fa-plus-circle me-2"></i>Ajouter une société
+                    </h4>
+                    
+                    <input type="hidden" id="societeId">
+
+                    <div class="mb-3">
+                        <label for="nomSociete" class="form-label text-secondary fw-semibold">Nom de la Société</label>
+                        <input type="text" class="form-control" id="nomSociete" placeholder="Ex: Ma Société SARL">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="iceSociete" class="form-label text-secondary fw-semibold">ICE (15 chiffres)</label>
+                        <input type="text" class="form-control" id="iceSociete" placeholder="Ex: 001234567000089" maxlength="15">
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                        <button id="btnEnregistrer" class="btn btn-cyan flex-grow-1">
+                            <i class="fa-solid fa-floppy-disk me-2"></i>Enregistrer
+                        </button>
+                        <button id="btnAnnuler" class="btn btn-outline-light d-none">
+                            Annuler
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-8">
+                <div class="card glass-card p-4 shadow-lg text-white">
+                    
+                    <div class="row align-items-center mb-4">
+                        <div class="col-md-6">
+                            <h4 class="mb-md-0"><i class="fa-solid fa-list me-2 text-secondary"></i>Liste des Entreprises</h4>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-dark border-secondary text-secondary">
+                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                </span>
+                                <input type="text" id="barreRecherche" class="form-control" placeholder="Rechercher par nom ou ICE...">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-glass text-white mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Nom de la Société</th>
+                                    <th>ICE</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="corpsTableau">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="aucunResultat" class="text-center text-secondary py-4 d-none">
+                        <i class="fa-solid fa-folder-open fa-2x mb-2"></i>
+                        <p>Aucune société enregistrée ou aucun résultat trouvé.</p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="text-center text-secondary py-3 border-top border-secondary mt-auto">
+        <p class="mb-0 small">Application développée par M.Seddik ELidrissi</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script src="https://js.puter.com/v2/"></script>
+
+    <script>
+        // LIER À TON COMPTE DE MANIÈRE DÉFINITIVE
+        puter.ui.setAppId("app-9963d37a-f945-4d6a-b6f1-c38f3d13affa");
+
+        // Éléments HTML
+        const nomSocieteInput = document.getElementById('nomSociete');
+        const iceSocieteInput = document.getElementById('iceSociete');
+        const societeIdInput = document.getElementById('societeId');
+        
+        const btnEnregistrer = document.getElementById('btnEnregistrer');
+        const btnAnnuler = document.getElementById('btnAnnuler');
+        const formTitle = document.getElementById('formTitle');
+        
+        const corpsTableau = document.getElementById('corpsTableau');
+        const barreRecherche = document.getElementById('barreRecherche');
+        const aucunResultat = document.getElementById('aucunResultat');
+
+        // Tableau local pour stocker les données chargées du Cloud (utile pour la recherche)
+        let toutesLesSocietes = [];
+
+        // --- 1. CHARGER ET AFFICHER LES DONNÉES ---
+        function chargerSocietes() {
+            puter.kv.list().then((cles) => {
+                // Initialiser/Vider les données
+                corpsTableau.innerHTML = "";
+                toutesLesSocietes = [];
+                
+                if (cles.length === 0) {
+                    aucunResultat.classList.remove('d-none');
+                    return;
+                }
+
+                let promesses = cles.map(cle => {
+                    return puter.kv.get(cle.key).then((valeurJson) => {
+                        try {
+                            const objet = JSON.parse(valeurJson);
+                            objet.id = cle.key; // On attache la clé unique Puter comme ID
+                            toutesLesSocietes.push(objet);
+                        } catch (e) {
+                            // Au cas où une ancienne chaîne brute traîne
+                            toutesLesSocietes.push({ id: cle.key, nom: valeurJson, ice: "" });
+                        }
+                    });
+                });
+
+                // Attendre d'avoir récupéré toutes les valeurs avant d'afficher
+                Promise.all(promesses).then(() => {
+                    afficherTableau(toutesLesSocietes);
+                });
+
+            }).catch(err => console.error("Erreur au chargement cloud:", err));
+        }
+
+        function afficherTableau(liste) {
+            corpsTableau.innerHTML = "";
+            if (liste.length === 0) {
+                aucunResultat.classList.remove('d-none');
+                return;
+            }
+            aucunResultat.classList.add('d-none');
+
+            // Trier par nom par défaut
+            liste.sort((a, b) => a.nom.localeCompare(b.nom));
+
+            liste.forEach((societe) => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="fw-bold text-white">${societe.nom}</td>
+                    <td><span class="badge bg-dark border border-secondary text-info p-2 font-monospace">${societe.ice || '---'}</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-outline-warning btn-sm me-2" onclick="preparerModification('${societe.id}', '${escapeHtml(societe.nom)}', '${societe.ice}')">
+                            <i class="fa-solid fa-pen"></i>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" onclick="supprimerSociete('${societe.id}')">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                corpsTableau.appendChild(tr);
+            });
+        }
+
+        // --- 2. AJOUTER OU MODIFIER UNE DONNÉE ---
+        btnEnregistrer.addEventListener('click', () => {
+            const nom = nomSocieteInput.value.trim();
+            const ice = iceSocieteInput.value.trim();
+            const idExistant = societeIdInput.value;
+
+            if (nom === "" || ice === "") {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Champs incomplets',
+                    text: 'Veuillez renseigner le Nom et l\'ICE.',
+                    confirmButtonColor: '#0dcaf0'
+                });
+                return;
+            }
+
+            // Objet structuré propre
+            const donneesSociete = {
+                nom: nom,
+                ice: ice,
+                misAJourLe: Date.now()
+            };
+
+            // Déterminer s'il s'agit d'un ajout ou d'une modification
+            const cleUnique = idExistant ? idExistant : "societe_" + Date.now();
+
+            puter.kv.set(cleUnique, JSON.stringify(donneesSociete))
+                .then(() => {
+                    Swal.fire({
+                        icon: 'success',
+                        title: idExistant ? 'Mise à jour réussie !' : 'Société enregistrée !',
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                    reinitialiserFormulaire();
+                    chargerSocietes();
+                })
+                .catch(err => {
+                    console.error(err);
+                    Swal.fire('Erreur', 'Opération échouée sur le cloud.', 'error');
+                });
+        });
+
+        // Passer le formulaire en mode Modification
+        window.preparerModification = function(id, nom, ice) {
+            formTitle.innerHTML = `<i class="fa-solid fa-pen-to-square me-2 text-warning"></i>Modifier la société`;
+            formTitle.className = "mb-4 text-warning";
+            
+            societeIdInput.value = id;
+            nomSocieteInput.value = nom;
+            iceSocieteInput.value = ice === "undefined" ? "" : ice;
+            
+            btnAnnuler.classList.remove('d-none');
+            btnEnregistrer.className = "btn btn-warning flex-grow-1 text-dark fw-bold";
+            nomSocieteInput.focus();
+        }
+
+        btnAnnuler.addEventListener('click', reinitialiserFormulaire);
+
+        function reinitialiserFormulaire() {
+            formTitle.innerHTML = `<i class="fa-solid fa-plus-circle me-2 text-info"></i>Ajouter une société`;
+            formTitle.className = "mb-4 text-info";
+            
+            societeIdInput.value = "";
+            nomSocieteInput.value = "";
+            iceSocieteInput.value = "";
+            
+            btnAnnuler.classList.add('d-none');
+            btnEnregistrer.className = "btn btn-cyan flex-grow-1";
+        }
+
+        // --- 3. RECHERCHER DES DONNÉES ---
+        barreRecherche.addEventListener('input', (e) => {
+            const motCle = e.target.value.toLowerCase().trim();
+            
+            const resultatsFiltres = toutesLesSocietes.filter(societe => {
+                const correspondNom = societe.nom.toLowerCase().includes(motCle);
+                const correspondIce = societe.ice.toLowerCase().includes(motCle);
+                return correspondNom || correspondIce;
+            });
+
+            afficherTableau(resultatsFiltres);
+        });
+
+        // --- 4. SUPPRIMER UNE DONNÉE ---
+        window.supprimerSociete = function(id) {
+            Swal.fire({
+                title: 'Êtes-vous sûr ?',
+                text: "Cette société sera définitivement supprimée du cloud.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc3545',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Oui, supprimer !',
+                cancelButtonText: 'Annuler'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    puter.kv.delete(id).then(() => {
+                        Swal.fire('Supprimé !', 'La société a été retirée du registre.', 'success');
+                        // Si on était en train de modifier cet élément, on réinitialise le formulaire
+                        if(societeIdInput.value === id) {
+                            reinitialiserFormulaire();
+                        }
+                        chargerSocietes();
+                    });
+                }
+            });
+        }
+
+        // Utilitaire pour éviter les failles XSS dans l'attribut HTML injecté
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        // Initialisation automatique à l'ouverture de la page
+        chargerSocietes();
+    </script>
+</body>
+</html>
