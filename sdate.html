@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Stock Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <style>
+        :root { --bg-color: #f4f6f9; --text-color: #212529; --card-bg: #ffffff; --footer-bg: #ffffff; }
+        .dark-mode { --bg-color: #121212; --text-color: #e0e0e0; --card-bg: #1e1e1e; --footer-bg: #2d2d2d; }
+        
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 70px; padding-bottom: 70px; transition: 0.3s; }
+        
+        .fixed-header { position: fixed; top: 0; width: 100%; z-index: 1000; background: #1e293b; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .fixed-footer { position: fixed; bottom: 0; width: 100%; background: var(--footer-bg); border-top: 1px solid #444; padding: 10px; text-align: center; transition: 0.3s; }
+        
+        .product-card { background-color: var(--card-bg); border-radius: 12px; margin-bottom: 12px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .status-danger { border-left: 6px solid #ef4444; }
+        .status-warning { border-left: 6px solid #f59e0b; }
+        .status-good { border-left: 6px solid #10b981; }
+        
+        .filter-btn { cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid #888; background: transparent; color: var(--text-color); }
+        .filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
+        .btn-good.active { background: #10b981; border-color: #10b981; }
+        .btn-warning.active { background: #f59e0b; border-color: #f59e0b; }
+        .btn-danger.active { background: #ef4444; border-color: #ef4444; }
+    </style>
+</head>
+<body class="dark-mode"> <header class="fixed-header">
+        <span class="fw-bold">Stock Manager</span>
+        <button class="btn btn-sm btn-outline-light" onclick="toggleDarkMode()"><i class="fa fa-moon"></i></button>
+    </header>
+
+    <div class="container mt-3">
+        <div class="card p-3 mb-4" style="background-color: var(--card-bg);">
+            <form id="productForm">
+                <input type="text" id="prodName" class="form-control mb-2" placeholder="Nom produit" required>
+                <div class="input-group mb-2">
+                    <input type="text" id="prodCode" class="form-control" placeholder="Code (ou scanner)" required>
+                    <button type="button" class="btn btn-secondary" onclick="startScanner()"><i class="fa fa-camera"></i></button>
+                </div>
+                <div id="reader" style="display:none; width: 100%; margin-bottom: 10px;"></div>
+                <input type="date" id="prodExpiry" class="form-control mb-3" required>
+                <button type="submit" class="btn btn-primary w-100">Ajouter</button>
+            </form>
+        </div>
+
+        <div class="d-flex overflow-auto gap-2 mb-3">
+            <div class="filter-btn active" onclick="filterData('all', this)">Tous</div>
+            <div class="filter-btn btn-good" onclick="filterData('good', this)">Sains</div>
+            <div class="filter-btn btn-warning" onclick="filterData('warning', this)">≤ 3 jours</div>
+            <div class="filter-btn btn-danger" onclick="filterData('danger', this)">Expirés</div>
+        </div>
+
+        <div id="productList"></div>
+    </div>
+
+    <footer class="fixed-footer text-muted small">
+        M. Seddik ELidrissi &copy; 2026
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9VCbb3lCGUvYBdIVjDfOEjcx2GZZruxdFhj9dIsUUiztC38yCPZ40-So1-ssaT8ww/exec";
+        let allProducts = [];
+        let currentFilter = 'all';
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        function startScanner() {
+            document.getElementById('reader').style.display = 'block';
+            const scanner = new Html5Qrcode("reader");
+            scanner.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (text) => {
+                document.getElementById('prodCode').value = text;
+                scanner.stop();
+                document.getElementById('reader').style.display = 'none';
+            });
+        }
+
+        async function fetchData() {
+            try {
+                const res = await fetch(SCRIPT_URL);
+                allProducts = await res.json();
+                render();
+            } catch (e) { Swal.fire('Erreur', 'Connexion impossible', 'error'); }
+        }
+
+        function render() {
+            const list = document.getElementById('productList');
+            list.innerHTML = '';
+            allProducts.filter(p => {
+                const diff = Math.ceil((new Date(p.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+                const status = diff < 0 ? 'danger' : (diff <= 3 ? 'warning' : 'good');
+                return currentFilter === 'all' || currentFilter === status;
+            }).forEach(p => {
+                const diff = Math.ceil((new Date(p.expiry) - new Date()) / (1000 * 60 * 60 * 24));
+                const status = diff < 0 ? 'danger' : (diff <= 3 ? 'warning' : 'good');
+                const div = document.createElement('div');
+                div.className = `product-card status-${status}`;
+                div.innerHTML = `<div class="d-flex justify-content-between align-items-center">
+                    <div><div class="fw-bold">${p.name}</div><small>Exp: ${new Date(p.expiry).toLocaleDateString('fr-FR')}</small></div>
+                    <button onclick="deleteProduct('${p.id}')" class="btn btn-sm text-danger"><i class="fa fa-trash"></i></button>
+                </div>`;
+                list.appendChild(div);
+            });
+        }
+
+        function filterData(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            Swal.fire({ title: 'En cours...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            const p = { action: 'add', id: Date.now(), name: document.getElementById('prodName').value, code: document.getElementById('prodCode').value, expiry: document.getElementById('prodExpiry').value };
+            await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(p) });
+            Swal.fire('Succès', 'Ajouté !', 'success');
+            fetchData();
+        });
+
+        async function deleteProduct(id) {
+            const confirm = await Swal.fire({ title: 'Supprimer ?', icon: 'warning', showCancelButton: true });
+            if (confirm.isConfirmed) {
+                await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify({ action: 'delete', id: id }) });
+                fetchData();
+            }
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>
