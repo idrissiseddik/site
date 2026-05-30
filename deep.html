@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Stock Pro</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    
+    <style>
+        :root { --bg-color: #f4f6f9; --text-color: #212529; --card-bg: #ffffff; --footer-bg: #ffffff; --input-bg: #ffffff; }
+        .dark-mode { --bg-color: #121212; --text-color: #e0e0e0; --card-bg: #1e1e1e; --footer-bg: #2d2d2d; --input-bg: #333333; }
+        body { background-color: var(--bg-color); color: var(--text-color); padding-top: 70px; padding-bottom: 70px; transition: 0.3s; }
+        .card, .product-card { background-color: var(--card-bg) !important; color: var(--text-color) !important; }
+        .form-control { background-color: var(--input-bg) !important; color: var(--text-color) !important; border: 1px solid #555; }
+        .fixed-header { position: fixed; top: 0; width: 100%; z-index: 1000; background: #1e293b; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .fixed-footer { position: fixed; bottom: 0; width: 100%; background: var(--footer-bg); border-top: 1px solid #444; padding: 10px; text-align: center; color: var(--text-color); }
+        .product-card { border-radius: 12px; margin-bottom: 12px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); cursor: pointer; transition: transform 0.2s; }
+        .product-card:hover { transform: translateX(5px); }
+        .status-danger { border-left: 6px solid #ef4444; background: rgba(239,68,68,0.1); }
+        .status-warning { border-left: 6px solid #f59e0b; background: rgba(245,158,11,0.1); }
+        .status-good { border-left: 6px solid #10b981; background: rgba(16,185,129,0.05); }
+        .filter-btn { cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid #888; background: transparent; color: var(--text-color); transition: 0.2s; }
+        .filter-btn.active { background: #3b82f6; color: white !important; border-color: #3b82f6; }
+        .filter-btn:hover { background: #3b82f6; color: white; }
+        #reader { border-radius: 12px; overflow: hidden; margin-bottom: 10px; }
+        .expiry-badge { font-size: 0.7rem; padding: 2px 8px; border-radius: 20px; display: inline-block; margin-top: 5px; }
+        .badge-danger { background: #ef4444; color: white; }
+        .badge-warning { background: #f59e0b; color: white; }
+        .badge-good { background: #10b981; color: white; }
+        .empty-state { text-align: center; padding: 40px; opacity: 0.6; }
+        .loading-spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="dark-mode"> 
+    <header class="fixed-header">
+        <span class="fw-bold"><i class="fa fa-boxes me-2"></i>Stock Manager Pro</span>
+        <button class="btn btn-sm btn-outline-light" onclick="toggleDarkMode()"><i class="fa fa-moon"></i></button>
+    </header>
+
+    <div class="container mt-3">
+        <div class="card p-3 mb-4 shadow-sm">
+            <form id="productForm">
+                <input type="text" id="prodName" class="form-control mb-2" placeholder="Nom du produit" required autocomplete="off">
+                <div class="input-group mb-2">
+                    <input type="text" id="prodCode" class="form-control" placeholder="Code barre / QR Code" autocomplete="off">
+                    <button type="button" class="btn btn-secondary" onclick="startScanner()"><i class="fa fa-camera"></i> Scanner</button>
+                </div>
+                <div id="reader" style="display:none; width: 100%; margin-bottom: 10px;"></div>
+                <input type="date" id="prodExpiry" class="form-control mb-3" required>
+                <button type="submit" class="btn btn-primary w-100"><i class="fa fa-plus me-1"></i>Ajouter au stock</button>
+            </form>
+        </div>
+
+        <div class="d-flex overflow-auto gap-2 mb-3 pb-1">
+            <div class="filter-btn active" data-filter="all" onclick="filterData('all', this)">📦 Tous</div>
+            <div class="filter-btn" data-filter="good" onclick="filterData('good', this)">✅ Sains</div>
+            <div class="filter-btn" data-filter="warning" onclick="filterData('warning', this)">⚠️ ≤ 6 jours</div>
+            <div class="filter-btn" data-filter="danger" onclick="filterData('danger', this)">❌ Expirés</div>
+        </div>
+        
+        <div id="productList">
+            <div class="empty-state">
+                <div class="loading-spinner"></div>
+                <p class="mt-3">Chargement des produits...</p>
+            </div>
+        </div>
+    </div>
+
+    <footer class="fixed-footer small">
+        <i class="fa fa-code-branch"></i> M. Seddik ELidrissi &copy; 2026
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // ==================== CONFIGURATION ====================
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwODcnHl5b0x3Si3MOwrjEJUeBZ6K8Xetl--vwrqtl_MnoU2RPlhvwx4Qar5zDcNeFN/exec";
+        
+        let allProducts = [];
+        let currentFilter = 'all';
+
+        // ==================== FONCTIONS PRINCIPALES ====================
+        
+        async function fetchData() {
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const res = await fetch(SCRIPT_URL, { 
+                    signal: controller.signal,
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                clearTimeout(timeoutId);
+                
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                
+                const data = await res.json();
+                
+                if (Array.isArray(data)) {
+                    allProducts = data;
+                } else if (data.data && Array.isArray(data.data)) {
+                    allProducts = data.data;
+                } else {
+                    allProducts = [];
+                }
+                
+                render();
+            } catch (e) {
+                console.error("Erreur de chargement:", e);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur de connexion',
+                    text: 'Impossible de charger les données depuis Google Sheet. Vérifiez votre connexion internet.',
+                    confirmButtonText: 'Réessayer'
+                }).then(() => {
+                    fetchData();
+                });
+                allProducts = [];
+                render();
+            }
+        }
+        
+        async function syncToServer(action, data) {
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ action, ...data })
+                });
+                
+                const result = await response.json();
+                return result.success === true;
+            } catch (e) {
+                console.error("Erreur sync:", e);
+                return false;
+            }
+        }
+        
+        // ==================== RENDU ====================
+        
+        function getStatusAndDays(expiryDate) {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const expiry = new Date(expiryDate);
+            expiry.setHours(0, 0, 0, 0);
+            const diff = Math.ceil((expiry - today) / (1000 * 60 * 60 * 24));
+            
+            let status = 'good';
+            if (diff < 0) status = 'danger';
+            else if (diff <= 6) status = 'warning';
+            
+            return { status, diff };
+        }
+        
+        function getStatusText(diff) {
+            if (diff < 0) return `Expiré depuis ${Math.abs(diff)}j`;
+            if (diff === 0) return "Expire aujourd'hui !";
+            if (diff <= 6) return `Expire dans ${diff}j`;
+            return `Valide (${diff}j restants)`;
+        }
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
+        function render() {
+            const list = document.getElementById('productList');
+            
+            const filtered = allProducts.filter(p => {
+                const { status } = getStatusAndDays(p.expiry);
+                return currentFilter === 'all' || currentFilter === status;
+            });
+            
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="empty-state">
+                    <i class="fa fa-inbox" style="font-size: 48px; opacity: 0.5;"></i>
+                    <p class="mt-3">Aucun produit dans cette catégorie</p>
+                </div>`;
+                return;
+            }
+            
+            list.innerHTML = '';
+            
+            filtered.forEach(p => {
+                const { status, diff } = getStatusAndDays(p.expiry);
+                const expiryDate = new Date(p.expiry);
+                const formattedExpiry = expiryDate.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+                
+                const div = document.createElement('div');
+                div.className = `product-card status-${status} mb-2`;
+                div.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div style="flex: 1;">
+                            <div class="fw-bold fs-5">${escapeHtml(p.name)}</div>
+                            <small style="opacity: 0.7;"><i class="fa fa-barcode"></i> ${escapeHtml(p.code)}</small><br>
+                            <small><i class="fa fa-calendar-alt"></i> Exp: ${formattedExpiry}</small>
+                            <div class="expiry-badge badge-${status} mt-1">
+                                ${getStatusText(diff)}
+                            </div>
+                        </div>
+                        <div class="d-flex gap-1">
+                            <button onclick="editProduct('${p.id}', '${p.expiry}')" class="btn btn-sm" style="color: #3b82f6;">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button onclick="deleteProduct('${p.id}')" class="btn btn-sm" style="color: #ef4444;">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                list.appendChild(div);
+            });
+        }
+        
+        // ==================== CRUD ====================
+        
+        async function addProduct(name, code, expiry) {
+            if (!name || !expiry) {
+                Swal.fire('Erreur', 'Nom et date d\'expiration requis', 'error');
+                return false;
+            }
+            
+            const newProduct = {
+                id: Date.now().toString(),
+                name: name.trim(),
+                code: code.trim() || `AUTO-${Date.now()}`,
+                expiry: expiry
+            };
+            
+            Swal.fire({
+                title: 'Enregistrement...',
+                text: 'Ajout du produit en cours',
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+            
+            const success = await syncToServer('add', newProduct);
+            
+            if (success) {
+                allProducts.unshift(newProduct);
+                render();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Produit ajouté',
+                    text: `${name} a été ajouté au stock`,
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+                return true;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Échec de l\'enregistrement dans Google Sheet. Vérifiez votre connexion.'
+                });
+                return false;
+            }
+        }
+        
+        async function editProduct(id, currentExpiry) {
+            const product = allProducts.find(p => p.id == id);
+            if (!product) return;
+            
+            const { value: date } = await Swal.fire({
+                title: 'Modifier la date d\'expiration',
+                html: `<p>Produit: <strong>${escapeHtml(product.name)}</strong></p>`,
+                input: 'date',
+                inputValue: currentExpiry,
+                showCancelButton: true,
+                confirmButtonText: 'Modifier',
+                cancelButtonText: 'Annuler',
+                inputValidator: (value) => {
+                    if (!value) return 'La date est requise';
+                    return null;
+                }
+            });
+            
+            if (date) {
+                Swal.fire({
+                    title: 'Mise à jour...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                const success = await syncToServer('edit', { id, expiry: date });
+                
+                if (success) {
+                    const index = allProducts.findIndex(p => p.id == id);
+                    if (index !== -1) allProducts[index].expiry = date;
+                    render();
+                    
+                    const { diff } = getStatusAndDays(date);
+                    let msg = diff < 0 ? "⚠️ Produit expiré !" : (diff <= 6 ? "Attention : expire bientôt" : "Date mise à jour");
+                    Swal.fire('Succès', msg, 'success');
+                } else {
+                    Swal.fire('Erreur', 'Modification échouée', 'error');
+                }
+            }
+        }
+        
+        async function deleteProduct(id) {
+            const product = allProducts.find(p => p.id == id);
+            if (!product) return;
+            
+            const result = await Swal.fire({
+                title: 'Confirmer la suppression',
+                html: `Supprimer <strong>${escapeHtml(product.name)}</strong> ?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'Oui, supprimer',
+                cancelButtonText: 'Annuler'
+            });
+            
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: 'Suppression...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                const success = await syncToServer('delete', { id });
+                
+                if (success) {
+                    allProducts = allProducts.filter(p => p.id != id);
+                    render();
+                    Swal.fire('Supprimé', 'Produit retiré du stock', 'success');
+                } else {
+                    Swal.fire('Erreur', 'Suppression échouée', 'error');
+                }
+            }
+        }
+        
+        // ==================== SCANNEUR ====================
+        
+        let currentScanner = null;
+        
+        async function startScanner() {
+            const readerDiv = document.getElementById('reader');
+            const codeInput = document.getElementById('prodCode');
+            
+            if (currentScanner) {
+                try {
+                    await currentScanner.stop();
+                } catch(e) {}
+                currentScanner = null;
+            }
+            
+            readerDiv.style.display = 'block';
+            readerDiv.innerHTML = '<div class="text-center p-3">🔍 Activation caméra...</div>';
+            
+            try {
+                const html5QrCode = new Html5Qrcode("reader");
+                currentScanner = html5QrCode;
+                
+                await html5QrCode.start(
+                    { facingMode: "environment" },
+                    { 
+                        fps: 10, 
+                        qrbox: { width: 250, height: 250 },
+                        aspectRatio: 1.0
+                    },
+                    (decodedText) => {
+                        codeInput.value = decodedText;
+                        html5QrCode.stop();
+                        readerDiv.style.display = 'none';
+                        currentScanner = null;
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Code scanné',
+                            text: decodedText,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    },
+                    (errorMessage) => {
+                        // Ignorer les erreurs de scan normales
+                    }
+                );
+            } catch (err) {
+                console.error("Erreur scanner:", err);
+                readerDiv.style.display = 'none';
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur caméra',
+                    text: "Impossible d'accéder à la caméra. Vérifiez les permissions.",
+                    confirmButtonText: 'OK'
+                });
+                currentScanner = null;
+            }
+        }
+        
+        // ==================== FILTRES ====================
+        
+        function filterData(type, btn) {
+            currentFilter = type;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            render();
+        }
+        
+        // ==================== DARK MODE ====================
+        
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+        }
+        
+        // Charger préférence dark mode
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        } else if (localStorage.getItem('darkMode') === 'false') {
+            document.body.classList.remove('dark-mode');
+        }
+        
+        // ==================== INITIALISATION ====================
+        
+        document.getElementById('productForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('prodName').value;
+            const code = document.getElementById('prodCode').value;
+            const expiry = document.getElementById('prodExpiry').value;
+            
+            if (!name || !expiry) {
+                Swal.fire('Erreur', 'Nom et date d\'expiration requis', 'error');
+                return;
+            }
+            
+            const success = await addProduct(name, code, expiry);
+            if (success) {
+                document.getElementById('productForm').reset();
+                document.getElementById('prodCode').value = '';
+            }
+        });
+        
+        // Chargement initial
+        fetchData();
+        
+        // Rafraîchissement automatique toutes les 30 secondes
+        setInterval(() => {
+            fetchData();
+        }, 30000);
+        
+        console.log("✅ Application démarrée - Connexion à Google Sheet");
+    </script>
+</body>
+</html>
