@@ -10,33 +10,45 @@
     <script src="https://unpkg.com/html5-qrcode"></script>
     
     <style>
-        :root { --bg-color: #f4f6f9; --text-color: #212529; --card-bg: #ffffff; --footer-bg: #ffffff; }
-        .dark-mode { --bg-color: #121212; --text-color: #e0e0e0; --card-bg: #1e1e1e; --footer-bg: #2d2d2d; }
+        :root { 
+            --bg-color: #f4f6f9; 
+            --text-color: #212529; 
+            --card-bg: #ffffff; 
+            --footer-bg: #ffffff;
+            --input-bg: #ffffff;
+        }
+        .dark-mode { 
+            --bg-color: #121212; 
+            --text-color: #e0e0e0; 
+            --card-bg: #1e1e1e; 
+            --footer-bg: #2d2d2d;
+            --input-bg: #333333;
+        }
         
         body { background-color: var(--bg-color); color: var(--text-color); padding-top: 70px; padding-bottom: 70px; transition: 0.3s; }
+        .card, .product-card { background-color: var(--card-bg) !important; color: var(--text-color) !important; }
+        .form-control { background-color: var(--input-bg) !important; color: var(--text-color) !important; border: 1px solid #555; }
         
         .fixed-header { position: fixed; top: 0; width: 100%; z-index: 1000; background: #1e293b; color: white; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .fixed-footer { position: fixed; bottom: 0; width: 100%; background: var(--footer-bg); border-top: 1px solid #444; padding: 10px; text-align: center; transition: 0.3s; }
+        .fixed-footer { position: fixed; bottom: 0; width: 100%; background: var(--footer-bg); border-top: 1px solid #444; padding: 10px; text-align: center; color: var(--text-color); }
         
-        .product-card { background-color: var(--card-bg); border-radius: 12px; margin-bottom: 12px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+        .product-card { border-radius: 12px; margin-bottom: 12px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
         .status-danger { border-left: 6px solid #ef4444; }
         .status-warning { border-left: 6px solid #f59e0b; }
         .status-good { border-left: 6px solid #10b981; }
         
         .filter-btn { cursor: pointer; padding: 8px 16px; border-radius: 20px; border: 1px solid #888; background: transparent; color: var(--text-color); }
-        .filter-btn.active { background: #3b82f6; color: white; border-color: #3b82f6; }
-        .btn-good.active { background: #10b981; border-color: #10b981; }
-        .btn-warning.active { background: #f59e0b; border-color: #f59e0b; }
-        .btn-danger.active { background: #ef4444; border-color: #ef4444; }
+        .filter-btn.active { background: #3b82f6; color: white !important; border-color: #3b82f6; }
     </style>
 </head>
-<body class="dark-mode"> <header class="fixed-header">
+<body class="dark-mode"> 
+    <header class="fixed-header">
         <span class="fw-bold">Stock Manager</span>
         <button class="btn btn-sm btn-outline-light" onclick="toggleDarkMode()"><i class="fa fa-moon"></i></button>
     </header>
 
     <div class="container mt-3">
-        <div class="card p-3 mb-4" style="background-color: var(--card-bg);">
+        <div class="card p-3 mb-4">
             <form id="productForm">
                 <input type="text" id="prodName" class="form-control mb-2" placeholder="Nom produit" required>
                 <div class="input-group mb-2">
@@ -51,15 +63,15 @@
 
         <div class="d-flex overflow-auto gap-2 mb-3">
             <div class="filter-btn active" onclick="filterData('all', this)">Tous</div>
-            <div class="filter-btn btn-good" onclick="filterData('good', this)">Sains</div>
-            <div class="filter-btn btn-warning" onclick="filterData('warning', this)">≤ 3 jours</div>
-            <div class="filter-btn btn-danger" onclick="filterData('danger', this)">Expirés</div>
+            <div class="filter-btn" onclick="filterData('good', this)">Sains</div>
+            <div class="filter-btn" onclick="filterData('warning', this)">≤ 6 jours</div>
+            <div class="filter-btn" onclick="filterData('danger', this)">Expirés</div>
         </div>
 
         <div id="productList"></div>
     </div>
 
-    <footer class="fixed-footer text-muted small">
+    <footer class="fixed-footer small">
         M. Seddik ELidrissi &copy; 2026
     </footer>
 
@@ -69,9 +81,7 @@
         let allProducts = [];
         let currentFilter = 'all';
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-        }
+        function toggleDarkMode() { document.body.classList.toggle('dark-mode'); }
 
         function startScanner() {
             document.getElementById('reader').style.display = 'block';
@@ -96,15 +106,19 @@
             list.innerHTML = '';
             allProducts.filter(p => {
                 const diff = Math.ceil((new Date(p.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                const status = diff < 0 ? 'danger' : (diff <= 3 ? 'warning' : 'good');
+                const status = diff < 0 ? 'danger' : (diff <= 6 ? 'warning' : 'good');
                 return currentFilter === 'all' || currentFilter === status;
             }).forEach(p => {
                 const diff = Math.ceil((new Date(p.expiry) - new Date()) / (1000 * 60 * 60 * 24));
-                const status = diff < 0 ? 'danger' : (diff <= 3 ? 'warning' : 'good');
+                const status = diff < 0 ? 'danger' : (diff <= 6 ? 'warning' : 'good');
                 const div = document.createElement('div');
                 div.className = `product-card status-${status}`;
                 div.innerHTML = `<div class="d-flex justify-content-between align-items-center">
-                    <div><div class="fw-bold">${p.name}</div><small>Exp: ${new Date(p.expiry).toLocaleDateString('fr-FR')}</small></div>
+                    <div>
+                        <div class="fw-bold">${p.name}</div>
+                        <small style="opacity: 0.8;">Code: ${p.code}</small><br>
+                        <small>Exp: ${new Date(p.expiry).toLocaleDateString('fr-FR')}</small>
+                    </div>
                     <button onclick="deleteProduct('${p.id}')" class="btn btn-sm text-danger"><i class="fa fa-trash"></i></button>
                 </div>`;
                 list.appendChild(div);
@@ -123,6 +137,10 @@
             Swal.fire({ title: 'En cours...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
             const p = { action: 'add', id: Date.now(), name: document.getElementById('prodName').value, code: document.getElementById('prodCode').value, expiry: document.getElementById('prodExpiry').value };
             await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(p) });
+            
+            // Réinitialisation du formulaire
+            document.getElementById('productForm').reset();
+            
             Swal.fire('Succès', 'Ajouté !', 'success');
             fetchData();
         });
