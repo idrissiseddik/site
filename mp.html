@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>MarketPlace - Annonces Cloud</title>
+
+    <!-- Bootstrap 5 + Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; padding-top: 70px; padding-bottom: 80px; min-height: 100vh; }
+        .swal2-container { z-index: 99999 !important; }
+
+        #landingPage {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9999;
+            background: linear-gradient(145deg, #1a2a6c, #b21f1f, #fdbb2d); background-size: 300% 300%;
+            animation: gradientMove 8s ease infinite; display: flex; flex-direction: column;
+            align-items: center; justify-content: space-between; color: #fff; text-align: center; padding: 1rem 2rem;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        #landingPage.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+        @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .landing-header { width: 100%; padding: 0.5rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.15); font-size: 1.1rem; font-weight: 500; }
+        .landing-header i { margin-right: 8px; color: #fdbb2d; }
+        .landing-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .landing-center .logo-icon { font-size: 4.5rem; margin-bottom: 1rem; }
+        .landing-center h1 { font-size: 2.8rem; font-weight: 800; }
+        .landing-center p { font-size: 1.1rem; opacity: 0.9; max-width: 400px; margin: 0.5rem auto 2rem; }
+        .landing-center .btn-enter {
+            background: #fff; color: #1a2a6c; border: none; padding: 0.9rem 3.5rem; border-radius: 50px;
+            font-size: 1.3rem; font-weight: 700; cursor: pointer; box-shadow: 0 8px 30px rgba(0,0,0,0.25);
+            display: inline-flex; align-items: center; gap: 12px; transition: 0.3s;
+        }
+        .landing-center .btn-enter:hover { transform: translateY(-3px); background: #f8f9fa; }
+        .landing-footer { width: 100%; padding: 0.8rem 0; border-top: 1px solid rgba(255, 255, 255, 0.15); font-size: 0.9srem; }
+        .landing-footer .contact-link { color: #fff; font-weight: 700; text-decoration: underline; cursor: pointer; background: none; border: none; }
+
+        .app-header {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1030;
+            background: linear-gradient(135deg, #1a2a6c, #2d4373); padding: 0.7rem 1rem;
+            display: flex; align-items: center; justify-content: space-between; height: 65px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        .app-header .brand { display: flex; align-items: center; gap: 10px; color: #fff; text-decoration: none; font-weight: 700; font-size: 1.3rem; }
+        .app-header .brand i { font-size: 1.6rem; color: #fdbb2d; }
+        .app-header .header-actions .btn-icon {
+            background: rgba(255,255,255,0.12); border: none; color: #fff; width: 40px; height: 40px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative;
+        }
+        .app-header .header-actions .btn-icon .badge-dot { position: absolute; top: 4px; right: 4px; width: 10px; height: 10px; background: #fdbb2d; border-radius: 50%; }
+
+        .app-footer {
+            position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1030; background: #fff;
+            border-top: 1px solid rgba(0,0,0,0.06); padding: 0.4rem 0.5rem 0.3rem; display: flex; flex-direction: column; align-items: center;
+        }
+        .app-footer .footer-row { display: flex; justify-content: space-around; align-items: center; width: 100%; }
+        .app-footer .footer-item { display: flex; flex-direction: column; align-items: center; color: #8a8fa8; font-size: 0.7rem; background: transparent; border: none; cursor: pointer; padding: 0.2rem 0.8rem; }
+        .app-footer .footer-item i { font-size: 1.5rem; margin-bottom: 2px; }
+        .app-footer .footer-item .fab-add {
+            background: linear-gradient(135deg, #1a2a6c, #2d4373); color: #fff; width: 52px; height: 52px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-top: -26px;
+            box-shadow: 0 6px 25px rgba(26,42,108,0.35);
+        }
+        .app-footer .footer-credit { font-size: 0.6rem; color: #a0a5b8; margin-top: 2px; width: 100%; text-align: center; border-top: 1px solid rgba(0,0,0,0.04); padding-top: 4px; }
+
+        .filters-bar { background: #fff; padding: 0.8rem 1rem; border-radius: 16px; margin-bottom: 1.2rem; display: flex; gap: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.05); }
+        .filters-bar .filter-group { flex: 1; }
+        .filters-bar .filter-group select { width: 100%; padding: 0.5rem; border: 1px solid #e2e6ee; border-radius: 10px; background: #f8f9fc; color: #1a2a6c; font-weight: 500; }
+
+        .ads-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+        @media (min-width: 576px) { .ads-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 992px) { .ads-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        .ad-card { background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.03); }
+        .ad-card .ad-image-wrapper { position: relative; height: 180px; background: #eef1f7; display: flex; align-items: center; justify-content: center; }
+        .ad-card .ad-image-wrapper img, .single-image { width: 100%; height: 100%; object-fit: contain; }
+        .ad-card .ad-badge { position: absolute; top: 12px; right: 12px; background: rgba(26,42,108,0.85); color: #fff; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.7rem; }
+        .ad-card .ad-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+        .ad-card .ad-title { font-size: 1.05rem; font-weight: 700; color: #1a2a6c; margin-bottom: 0.3rem; }
+        .ad-card .ad-message { font-size: 0.9rem; color: #5a607a; flex: 1; margin-bottom: 0.5rem; }
+        .ad-card .ad-meta { display: flex; justify-content: space-between; align-items: center; }
+        .ad-card .ad-price { font-size: 1.2rem; font-weight: 800; color: #b21f1f; }
+        .ad-card .ad-city { font-size: 0.75rem; background: #f1f3f8; padding: 0.2rem 0.7rem; border-radius: 20px; color: #5a607a; }
+        .ad-card .ad-actions { display: flex; gap: 6px; margin-top: 0.7rem; border-top: 1px solid #f0f2f7; padding-top: 0.7rem; }
+        .ad-card .ad-actions .btn-contact { flex: 1; border: none; border-radius: 10px; padding: 0.5rem 0; font-size: 0.8rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; text-decoration: none; color: #fff; }
+        .btn-call { background: #25a56a; }
+        .btn-whatsapp { background: #25d366; }
+
+        .empty-state { text-align: center; padding: 3rem 1.5rem; color: #8a8fa8; }
+        .empty-state i { font-size: 4rem; color: #dce1ea; margin-bottom: 1rem; }
+
+        #adminPanel {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 9998;
+            background: rgba(0,0,0,0.55); backdrop-filter: blur(8px); display: none; align-items: center; justify-content: center; padding: 1rem;
+        }
+        #adminPanel.show { display: flex; }
+        #adminPanel .admin-box { background: #fff; border-radius: 28px; max-width: 700px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 1.8rem; }
+        .admin-ad-item { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem; border-bottom: 1px solid #f0f2f7; }
+        .btn-del-ad { background: #ffebee; color: #b21f1f; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <!-- LANDING PAGE -->
+    <div id="landingPage">
+        <div class="landing-header"><i class="fas fa-store-alt"></i> Bienvenue sur MarketPlace (Cloud Synced) !</div>
+        <div class="landing-center">
+            <div class="logo-icon"><i class="fas fa-store-alt"></i></div>
+            <h1>MarketPlace</h1>
+            <p>Annonces synchronisées en temps réel via Google Cloud.</p>
+            <button class="btn-enter" id="enterAppBtn"><i class="fas fa-arrow-right"></i> Entrer</button>
+            <small style="margin-top:1.5rem;opacity:0.5;font-size:0.75rem;">🔒 Admin mot de passe : Seddik</small>
+        </div>
+        <div class="landing-footer">
+            <i class="fas fa-question-circle"></i> Besoin d'aide ? <button class="contact-link" id="contactLinkLanding">Contactez l'admin</button>
+        </div>
+    </div>
+
+    <!-- MAIN APP -->
+    <div id="mainApp" style="display:none;">
+        <header class="app-header">
+            <a href="#" class="brand" id="goHomeBtn"><i class="fas fa-store-alt"></i><span>MarketPlace</span></a>
+            <div class="header-actions">
+                <button class="btn-icon" id="adminLockBtn"><i class="fas fa-lock"></i><span class="badge-dot"></span></button>
+            </div>
+        </header>
+
+        <main class="container py-3" style="max-width:1200px;">
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <select id="filterCategory">
+                        <option value="">Toutes catégories</option>
+                        <option value="Véhicules">🚗 Véhicules</option>
+                        <option value="Électronique">📱 Électronique</option>
+                        <option value="Immobilier">🏠 Immobilier</option>
+                        <option value="Services">🛠 Services</option>
+                        <option value="Autre">📦 Autre</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <select id="filterCity">
+                        <option value="">Toutes villes</option>
+                        <option value="Casablanca">Casablanca</option>
+                        <option value="Rabat">Rabat</option>
+                        <option value="Marrakech">Marrakech</option>
+                        <option value="Tanger">Tanger</option>
+                        <option value="Agadir">Agadir</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="adsContainer">
+                <div class="ads-grid" id="adsGrid">
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <h5>Connexion au Cloud en cours...</h5>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <div class="footer-row">
+                <button class="footer-item" id="footerHome"><i class="fas fa-home"></i><span>Accueil</span></button>
+                <button class="footer-item" id="footerAdd"><div class="fab-add"><i class="fas fa-plus"></i></div><span style="margin-top:2px;">Publier</span></button>
+                <button class="footer-item" id="footerAdmin"><i class="fas fa-user-shield"></i><span>Admin</span></button>
+            </div>
+            <div class="footer-credit">
+                <i class="fas fa-code"></i> Créé Par : M.Seddik ELidrissi <i class="fas fa-heart" style="color:#b21f1f;"></i>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ADMIN PANEL -->
+    <div id="adminPanel">
+        <div class="admin-box">
+            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                <h4 style="color:#1a2a6c; font-weight:800; margin:0;"><i class="fas fa-user-shield"></i> Panneau Admin</h4>
+                <button class="bg-transparent border-0 fs-3" id="closeAdminPanel"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="adminAdsList"><p class="text-muted text-center py-3">Chargement...</p></div>
+        </div>
+    </div>
+
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwBLJKEMIIsrt9k_By_GMiIaVt8bWBO4HR-TtCoA-iZpu3nA367UEolURVfI16eOJ1K8g/exec";
+        const ADMIN_PASSWORD = 'Seddik';
+        const CONTACT_PHONE = '212608975435';
+
+        let ads = [];
+        let currentFilter = { category: '', city: '' };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAdsFromCloud();
+            document.getElementById('enterAppBtn').addEventListener('click', enterApp);
+            document.getElementById('contactLinkLanding').addEventListener('click', openContactForm);
+            document.getElementById('adminLockBtn').addEventListener('click', openAdminAuth);
+            document.getElementById('footerAdmin').addEventListener('click', openAdminAuth);
+            document.getElementById('closeAdminPanel').addEventListener('click', closeAdminPanel);
+            document.getElementById('filterCategory').addEventListener('change', applyFilters);
+            document.getElementById('filterCity').addEventListener('change', applyFilters);
+            document.getElementById('footerHome').addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+            document.getElementById('footerAdd').addEventListener('click', openAddAdModal);
+        });
+
+        async function fetchAdsFromCloud() {
+            try {
+                if (WEB_APP_URL.includes("VOTRE_URL")) {
+                    document.getElementById('adsGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-exclamation-triangle text-warning"></i><h5>URL Apps Script manquante</h5></div>`;
+                    return;
+                }
+                const response = await fetch(WEB_APP_URL);
+                const result = await response.json();
+                if (result.status === "success") {
+                    ads = result.data || [];
+                    renderAds();
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                document.getElementById('adsGrid').innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-wifi text-danger"></i><h5>Erreur de connexion</h5><p class="text-muted">Impossible de récupérer les annonces depuis le Cloud.</p></div>`;
+            }
+        }
+
+        async function sendToCloud(action, adData) {
+            Swal.fire({ title: 'Synchronisation...', text: 'Enregistrement cloud en cours', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+            try {
+                const response = await fetch(WEB_APP_URL, { method: 'POST', body: JSON.stringify({ action, ...adData }) });
+                const result = await response.json();
+                if (result.status === "success") {
+                    await fetchAdsFromCloud();
+                    return true;
+                } else {
+                    throw new Error(result.message);
+                }
+            } catch (error) {
+                Swal.fire('Erreur', 'Échec : ' + error.message, 'error');
+                return false;
+            }
+        }
+
+        function enterApp() {
+            const landing = document.getElementById('landingPage');
+            landing.classList.add('hide');
+            setTimeout(() => { landing.style.display = 'none'; document.getElementById('mainApp').style.display = 'block'; }, 600);
+        }
+
+        function openContactForm() {
+            Swal.fire({
+                title: '📩 Contactez l\'admin',
+                html: `<div style="text-align:left;"><div class="mb-2"><label class="form-label fw-bold">Nom *</label><input id="contactName" class="form-control" /></div><div class="mb-2"><label class="form-label fw-bold">Téléphone *</label><input id="contactPhone" class="form-control" type="tel" /></div><div class="mb-2"><label class="form-label fw-bold">Message *</label><textarea id="contactMessage" class="form-control" rows="3"></textarea></div></div>`,
+                showCancelButton: true, confirmButtonText: '📤 WhatsApp', confirmButtonColor: '#25d366',
+                preConfirm: () => {
+                    const name = document.getElementById('contactName').value.trim();
+                    const phone = document.getElementById('contactPhone').value.trim();
+                    const msg = document.getElementById('contactMessage').value.trim();
+                    if (!name || !phone || !msg) { Swal.showValidationMessage('Tous les champs sont requis'); return false; }
+                    return `Nom: ${name}\nTél: ${phone}\nMessage: ${msg}`;
+                }
+            }).then(res => { if (res.isConfirmed) window.open(`https://wa.me/${CONTACT_PHONE}?text=${encodeURIComponent(res.value)}`, '_blank'); });
+        }
+
+        function renderAds() {
+            const grid = document.getElementById('adsGrid');
+            const filtered = getFilteredAds();
+            if (!filtered.length) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fas fa-box-open"></i><h5>Aucune annonce trouvée</h5></div>`;
+                return;
+            }
+            grid.innerHTML = filtered.map(ad => {
+                const images = ad.images && ad.images.length ? ad.images : [];
+                let imageHtml = images.length ? `<img src="${images[0]}" alt="Photo" class="single-image" />` : `<div class="d-flex align-items-center justify-content-center h-100 fs-1 text-secondary"><i class="fas fa-image"></i></div>`;
+                return `
+                <div class="ad-card">
+                    <div class="ad-image-wrapper">${imageHtml}<span class="ad-badge">${escapeHtml(ad.category || 'Général')}</span></div>
+                    <div class="ad-body">
+                        <div class="ad-title">${escapeHtml(ad.title)}</div>
+                        <div class="ad-message">${escapeHtml(ad.message)}</div>
+                        <div class="ad-meta">
+                            <div class="ad-price">${formatPrice(ad.price)} <span>DH</span></div>
+                            <span class="ad-city"><i class="fas fa-map-pin me-1"></i>${escapeHtml(ad.city || 'N/A')}</span>
+                        </div>
+                        <div class="ad-actions">
+                            <a href="tel:${ad.phone}" class="btn-contact btn-call"><i class="fas fa-phone"></i> Appeler</a>
+                            <a href="https://wa.me/212${ad.phone.replace(/^0/, '')}" target="_blank" class="btn-contact btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function getFilteredAds() {
+            let result = [...ads];
+            if (currentFilter.category) result = result.filter(a => a.category === currentFilter.category);
+            if (currentFilter.city) result = result.filter(a => a.city === currentFilter.city);
+            result.sort((a, b) => b.createdAt - a.createdAt);
+            return result;
+        }
+
+        function applyFilters() {
+            currentFilter.category = document.getElementById('filterCategory').value;
+            currentFilter.city = document.getElementById('filterCity').value;
+            renderAds();
+        }
+
+        function openAddAdModal() {
+            Swal.fire({
+                title: 'Publier une annonce',
+                html: `<div style="text-align:left;"><div class="mb-2"><label class="form-label fw-bold">Titre *</label><input id="swalTitle" class="form-control" /></div><div class="mb-2"><label class="form-label fw-bold">Description *</label><textarea id="swalMessage" class="form-control" rows="2"></textarea></div><div class="row g-2"><div class="col-6"><label class="form-label fw-bold">Prix (DH) *</label><input id="swalPrice" class="form-control" type="number" /></div><div class="col-6"><label class="form-label fw-bold">Téléphone *</label><input id="swalPhone" class="form-control" type="tel" /></div></div><div class="row g-2 mt-1"><div class="col-6"><label class="form-label fw-bold">Catégorie</label><select id="swalCategory" class="form-select"><option value="Véhicules">Véhicules</option><option value="Électronique">Électronique</option><option value="Immobilier">Immobilier</option><option value="Services">Services</option><option value="Autre">Autre</option></select></div><div class="col-6"><label class="form-label fw-bold">Ville</label><select id="swalCity" class="form-select"><option value="Casablanca">Casablanca</option><option value="Rabat">Rabat</option><option value="Marrakech">Marrakech</option><option value="Tanger">Tanger</option><option value="Agadir">Agadir</option></select></div></div><div class="mt-2"><label class="form-label fw-bold">📸 Photos</label><input id="swalImages" class="form-control" type="file" accept="image/*" multiple /></div></div>`,
+                showCancelButton: true, confirmButtonText: '✅ Publier', confirmButtonColor: '#1a2a6c',
+                preConfirm: () => {
+                    const title = document.getElementById('swalTitle').value.trim();
+                    const message = document.getElementById('swalMessage').value.trim();
+                    const price = document.getElementById('swalPrice').value.trim();
+                    const phone = document.getElementById('swalPhone').value.trim();
+                    const category = document.getElementById('swalCategory').value;
+                    const city = document.getElementById('swalCity').value;
+                    const files = document.getElementById('swalImages').files;
+                    if (!title || !message || !price || !phone) { Swal.showValidationMessage('Veuillez remplir les champs obligatoires'); return false; }
+                    return new Promise((resolve) => {
+                        if (!files.length) { resolve({ title, message, price, phone, category, city, images: [] }); return; }
+                        const imageData = []; let completed = 0;
+                        for (let i = 0; i < files.length; i++) {
+                            const reader = new FileReader();
+                            reader.onload = (e) => {
+                                imageData.push(e.target.result);
+                                completed++;
+                                if (completed === files.length) resolve({ title, message, price, phone, category, city, images: imageData });
+                            };
+                            reader.readAsDataURL(files[i]);
+                        }
+                    });
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed && result.value) {
+                    await sendToCloud('add', { id: Date.now(), ...result.value, createdAt: Date.now() });
+                    Swal.fire({ icon: 'success', title: 'Publié dans le Cloud !', timer: 1500, showConfirmButton: false });
+                }
+            });
+        }
+
+        function openAdminAuth() {
+            Swal.fire({
+                title: '🔐 Accès Admin', input: 'password', showCancelButton: true, confirmButtonText: 'Entrer', confirmButtonColor: '#1a2a6c',
+                preConfirm: (val) => { if (val !== ADMIN_PASSWORD) { Swal.showValidationMessage('Mot de passe incorrect'); return false; } return true; }
+            }).then(res => { if (res.isConfirmed) { document.getElementById('adminPanel').classList.add('show'); renderAdminList(); } });
+        }
+
+        function closeAdminPanel() { document.getElementById('adminPanel').classList.remove('show'); }
+
+        function renderAdminList() {
+            const container = document.getElementById('adminAdsList');
+            if (!ads.length) { container.innerHTML = `<p class="text-muted text-center py-3">Aucune annonce.</p>`; return; }
+            container.innerHTML = ads.map(ad => `
+                <div class="admin-ad-item">
+                    <div><div class="fw-bold" style="font-weight:600;color:#1a2a6c;">${escapeHtml(ad.title)}</div><small class="text-muted">${formatPrice(ad.price)} DH - ${escapeHtml(ad.city)}</small></div>
+                    <button class="btn-del-ad" onclick="deleteAd(${ad.id})"><i class="fas fa-trash"></i></button>
+                </div>`).join('');
+        }
+
+        async function deleteAd(id) {
+            const confirm = await Swal.fire({ title: 'Supprimer ?', icon: 'warning', showCancelButton: true, confirmButtonColor: '#b21f1f' });
+            if (confirm.isConfirmed) {
+                await sendToCloud('delete', { id });
+                renderAdminList();
+                Swal.fire({ icon: 'success', title: 'Supprimée', timer: 1000, showConfirmButton: false });
+            }
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return String(text).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m]));
+        }
+
+        function formatPrice(price) {
+            const num = parseFloat(price);
+            return isNaN(num) ? price : num.toLocaleString('fr-FR');
+        }
+    </script>
+</body>
+</html>
