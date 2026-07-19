@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
     <style>
-        /* ===== STYLES COMPLETS ===== */
+        /* ---------- RESET & BASE ---------- */
         * {
             margin: 0;
             padding: 0;
@@ -35,7 +35,7 @@
             position: relative;
         }
 
-        /* --- LANDING PAGE --- */
+        /* ---------- LANDING PAGE ---------- */
         #landing-page {
             position: fixed;
             inset: 0;
@@ -63,6 +63,7 @@
             font-weight: 800;
             color: #f4b400;
             text-shadow: 0 0 30px rgba(244, 180, 0, 0.3);
+            letter-spacing: -0.5px;
         }
         .landing-sub {
             color: rgba(255, 255, 255, 0.7);
@@ -108,7 +109,7 @@
             }
         }
 
-        /* --- CONTAINER --- */
+        /* ---------- CONTAINER PRINCIPAL ---------- */
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -125,7 +126,7 @@
             z-index: 1;
         }
 
-        /* --- HEADER --- */
+        /* ---------- HEADER ---------- */
         header {
             background: linear-gradient(135deg, #f4b400 0%, #e67e22 100%);
             color: white;
@@ -137,6 +138,7 @@
         header h1 {
             font-size: 2rem;
             font-weight: 800;
+            letter-spacing: -0.5px;
         }
         header h1 i {
             margin-right: 8px;
@@ -166,7 +168,7 @@
             transform: rotate(20deg);
         }
 
-        /* --- HERO --- */
+        /* ---------- HERO ---------- */
         .hero {
             padding: 24px 20px;
             text-align: center;
@@ -184,7 +186,7 @@
             margin: 6px 0 16px;
         }
 
-        /* --- BOUTONS --- */
+        /* ---------- BOUTONS ---------- */
         .btn {
             padding: 12px 28px;
             border: none;
@@ -258,8 +260,22 @@
             background: rgba(108, 117, 125, 0.3);
             transform: translateY(-2px);
         }
+        .btn-filter {
+            background: rgba(244, 180, 0, 0.12);
+            color: #e67e22;
+            border: 2px solid rgba(244, 180, 0, 0.2);
+        }
+        .btn-filter:hover {
+            background: rgba(244, 180, 0, 0.25);
+            transform: translateY(-2px);
+        }
+        .btn-filter.active {
+            background: linear-gradient(135deg, #f4b400, #e67e22);
+            color: #fff;
+            border-color: #f4b400;
+        }
 
-        /* --- FILTRES --- */
+        /* ---------- FILTRES ---------- */
         .filters {
             padding: 16px 20px;
             background: rgba(255, 255, 255, 0.6);
@@ -285,7 +301,7 @@
             border-color: #f4b400;
         }
 
-        /* --- CATÉGORIES --- */
+        /* ---------- CATÉGORIES ---------- */
         .categories {
             padding: 20px;
             display: grid;
@@ -319,7 +335,7 @@
             font-size: 0.8rem;
         }
 
-        /* --- VUE ANNONCES --- */
+        /* ---------- PAGE ANNONCES ---------- */
         #ads-view {
             display: none;
             padding: 0;
@@ -410,6 +426,70 @@
             font-size: 0.9rem;
             white-space: nowrap;
         }
+        .ads-view-header .stats .view-options {
+            display: flex;
+            gap: 6px;
+        }
+        .ads-view-header .stats .view-options button {
+            background: none;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 6px 10px;
+            cursor: pointer;
+            color: #999;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        .ads-view-header .stats .view-options button.active {
+            border-color: #f4b400;
+            color: #f4b400;
+            background: rgba(244, 180, 0, 0.1);
+        }
+        .ads-view-header .stats .view-options button:hover {
+            border-color: #f4b400;
+            color: #f4b400;
+        }
+
+        .ads-quick-filters {
+            padding: 16px 28px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .ads-quick-filters .label {
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .ads-quick-filters .filter-chip {
+            padding: 6px 16px;
+            border-radius: 50px;
+            background: white;
+            border: 2px solid #e0e0e0;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            color: #555;
+        }
+        .ads-quick-filters .filter-chip:hover,
+        .ads-quick-filters .filter-chip.active {
+            border-color: #f4b400;
+            color: #f4b400;
+            background: rgba(244, 180, 0, 0.08);
+        }
+        .ads-quick-filters .filter-chip .count {
+            background: #eee;
+            padding: 1px 8px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            margin-left: 4px;
+        }
+        .ads-quick-filters .filter-chip.active .count {
+            background: rgba(244, 180, 0, 0.2);
+        }
 
         #ads-container {
             padding: 24px 28px;
@@ -418,7 +498,6 @@
             gap: 24px;
         }
 
-        /* --- CARTE ANNONCE --- */
         .ad-card {
             background: #fff;
             border-radius: 20px;
@@ -461,6 +540,7 @@
             font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .ad-card .image-wrapper .images-count {
             position: absolute;
@@ -553,7 +633,31 @@
             background: rgba(244, 180, 0, 0.25);
         }
 
-        /* --- FOOTER FIXE --- */
+        #ads-container.list-view {
+            grid-template-columns: 1fr;
+        }
+        #ads-container.list-view .ad-card {
+            display: flex;
+            flex-direction: row;
+            align-items: stretch;
+            min-height: 160px;
+        }
+        #ads-container.list-view .ad-card .image-wrapper {
+            width: 220px;
+            height: auto;
+            flex-shrink: 0;
+        }
+        #ads-container.list-view .ad-card .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #ads-container.list-view .ad-card .card-body .ad-footer-actions {
+            margin-top: 8px;
+        }
+
+        /* ---------- FOOTER FIXE ---------- */
         .fixed-footer {
             position: fixed;
             bottom: 0;
@@ -589,161 +693,295 @@
             background: rgba(244, 180, 0, 0.2);
             transform: scale(1.05);
         }
+        .fixed-footer .contact-link i {
+            font-size: 0.9rem;
+        }
 
-        /* ===== MODALES PLEIN ÉCRAN ===== */
-        .modal-overlay {
+        /* ========================================== */
+        /* MODALE CONTACT                            */
+        /* ========================================== */
+        .contact-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-            padding: 0;
-        }
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal-fullscreen {
-            position: fixed;
-            inset: 0;
-            background: #f5f7fa;
-            display: flex;
+            background: rgba(10, 20, 40, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 4000;
             flex-direction: column;
-            z-index: 2001;
-            animation: modalIn 0.35s ease;
+            animation: modalFadeIn 0.4s ease;
         }
-
-        @keyframes modalIn {
-            from {
-                transform: scale(0.95);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        /* Header de modale */
-        .modal-header {
-            background: linear-gradient(135deg, #f4b400 0%, #e67e22 100%);
-            color: white;
-            padding: 18px 24px;
+        .contact-modal.active {
             display: flex;
-            align-items: center;
+        }
+
+        .contact-modal-header {
+            background: linear-gradient(135deg, #0a1628, #1a1a3e);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
             justify-content: space-between;
+            align-items: center;
             flex-shrink: 0;
             min-height: 70px;
+            border-bottom: 2px solid rgba(244, 180, 0, 0.3);
         }
-        .modal-header h2 {
+        .contact-modal-header h2 {
             font-size: 1.4rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 12px;
+            color: #f4b400;
+            margin: 0;
         }
-        .modal-header .modal-close {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 42px;
-            height: 42px;
+        .contact-modal-header h2 i {
+            background: rgba(244, 180, 0, 0.15);
+            padding: 10px;
             border-radius: 50%;
-            cursor: pointer;
+            font-size: 1.2rem;
+            border: 2px solid rgba(244, 180, 0, 0.2);
+        }
+        .contact-modal-close {
+            background: rgba(255, 255, 255, 0.08);
+            border: 2px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             font-size: 1.3rem;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-        .modal-header .modal-close:hover {
-            background: rgba(255, 255, 255, 0.35);
+        .contact-modal-close:hover {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff4444;
             transform: rotate(90deg);
         }
 
-        /* Corps de modale - scrollable */
-        .modal-body {
+        .contact-modal-body {
             flex: 1;
             overflow-y: auto;
-            padding: 24px 28px;
-            background: #f5f7fa;
-        }
-
-        /* Footer de modale */
-        .modal-footer {
-            background: #fff;
-            padding: 16px 24px;
-            border-top: 1px solid #e0e0e0;
+            padding: 30px 20px;
+            background: transparent;
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            flex-shrink: 0;
-            justify-content: flex-end;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
-        }
-        .modal-footer .btn {
-            min-width: 120px;
+            align-items: center;
             justify-content: center;
         }
 
-        /* --- FORMULAIRES DANS MODALES --- */
-        .form-group {
-            margin-bottom: 18px;
+        .contact-modal-body .contact-form-container {
+            max-width: 560px;
+            width: 100%;
+            background: transparent;
+            padding: 0;
         }
-        .form-group label {
+
+        .contact-modal-body .form-title {
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+        .contact-modal-body .form-title i {
+            color: #f4b400;
+            margin-right: 10px;
+        }
+
+        .contact-modal-body .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .contact-modal-body .form-group label {
             display: block;
             margin-bottom: 6px;
-            color: #333;
+            color: rgba(255, 255, 255, 0.8);
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
         }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
+        .contact-modal-body .form-group label i {
+            margin-right: 8px;
+            color: #f4b400;
+            width: 20px;
+        }
+
+        .contact-modal-body .form-group .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .contact-modal-body .form-group input,
+        .contact-modal-body .form-group select,
+        .contact-modal-body .form-group textarea {
             width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 14px;
+            padding: 14px 18px;
+            padding-right: 50px;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0;
             font-size: 1rem;
-            transition: all 0.3s;
-            background: #fff;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
+            transition: all 0.3s ease;
+            background: transparent;
+            color: #fff;
             outline: none;
-            border-color: #f4b400;
-            box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.15);
         }
-        .form-group input.error,
-        .form-group select.error,
-        .form-group textarea.error {
-            border-color: #ff4444;
-            box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.15);
+
+        .contact-modal-body .form-group input::placeholder,
+        .contact-modal-body .form-group textarea::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 300;
         }
-        .form-group textarea {
+
+        .contact-modal-body .form-group input:focus,
+        .contact-modal-body .form-group select:focus,
+        .contact-modal-body .form-group textarea:focus {
+            border-bottom-color: #f4b400;
+            box-shadow: 0 2px 0 #f4b400;
+        }
+
+        .contact-modal-body .form-group input.error,
+        .contact-modal-body .form-group select.error,
+        .contact-modal-body .form-group textarea.error {
+            border-bottom-color: #ff4444;
+            box-shadow: 0 2px 0 #ff4444;
+        }
+
+        .contact-modal-body .form-group input.success,
+        .contact-modal-body .form-group select.success,
+        .contact-modal-body .form-group textarea.success {
+            border-bottom-color: #28a745;
+            box-shadow: 0 2px 0 #28a745;
+        }
+
+        .contact-modal-body .form-group .input-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: transparent;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            pointer-events: none;
+        }
+
+        .contact-modal-body .form-group .input-icon.success {
+            color: #28a745;
+        }
+        .contact-modal-body .form-group .input-icon.error {
+            color: #ff4444;
+        }
+
+        .contact-modal-body .form-group textarea+.input-icon {
+            top: 18px;
+            transform: none;
+        }
+
+        .contact-modal-body .form-group select {
+            color: #fff;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='rgba(255,255,255,0.5)' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 50px;
+            cursor: pointer;
+        }
+        .contact-modal-body .form-group select option {
+            background: #1a1a3e;
+            color: #fff;
+            padding: 8px;
+        }
+        .contact-modal-body .form-group textarea {
             resize: vertical;
             min-height: 100px;
         }
-        .form-group input[type="file"] {
-            padding: 10px;
-            background: #fafafa;
-            border-style: dashed;
-            border-color: #ccc;
+
+        .contact-error-message {
+            display: none;
+            background: rgba(255, 68, 68, 0.15);
+            border-left: 4px solid #ff4444;
+            padding: 12px 18px;
+            border-radius: 8px;
+            color: #ff6b6b;
+            font-weight: 500;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            animation: slideDown 0.4s ease;
         }
-        .form-group input[type="file"]:hover {
-            border-color: #f4b400;
-            background: #fefaf0;
+        .contact-error-message.active {
+            display: block;
         }
-        .form-group input[type="file"]:not(:first-of-type) {
-            margin-top: 8px;
+        .contact-error-message i {
+            margin-right: 10px;
+            font-size: 1.1rem;
         }
 
-        /* --- ADMIN --- */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .contact-modal-footer {
+            background: transparent;
+            padding: 8px 24px 28px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            justify-content: center;
+        }
+
+        .contact-modal-footer .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 16px 24px;
+            font-size: 1rem;
+            border-radius: 14px;
+            min-width: 140px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        .contact-modal-footer .btn-send {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: #fff;
+            border: none;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+        .contact-modal-footer .btn-send:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(37, 211, 102, 0.4);
+        }
+        .contact-modal-footer .btn-send i {
+            font-size: 1.2rem;
+        }
+
+        .contact-modal-footer .btn-close-red {
+            background: linear-gradient(135deg, #dc3545, #b02a37);
+            color: #fff;
+            border: none;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+        }
+        .contact-modal-footer .btn-close-red:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(220, 53, 69, 0.4);
+        }
+
+        /* ========================================== */
+        /* PANEL ADMIN AVEC FILTRES                   */
+        /* ========================================== */
         .admin-panel {
             display: none;
         }
@@ -789,6 +1027,9 @@
             align-items: center;
             gap: 8px;
         }
+        .admin-header .admin-stats .stat-badge strong {
+            color: #1a1a2e;
+        }
 
         .admin-filters {
             padding: 16px 28px;
@@ -799,6 +1040,14 @@
             flex-wrap: wrap;
             align-items: center;
         }
+        .admin-filters .filter-label {
+            color: #888;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
         .admin-filters select {
             padding: 8px 14px;
             border: 2px solid #ddd;
@@ -806,11 +1055,47 @@
             font-size: 0.9rem;
             cursor: pointer;
             background: #fff;
+            transition: border 0.3s;
             min-width: 140px;
         }
         .admin-filters select:focus {
             outline: none;
             border-color: #f4b400;
+        }
+        .admin-filters .btn-filter {
+            padding: 8px 20px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            color: #555;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .admin-filters .btn-filter:hover {
+            border-color: #f4b400;
+            color: #e67e22;
+        }
+        .admin-filters .btn-filter.active {
+            background: linear-gradient(135deg, #f4b400, #e67e22);
+            color: #fff;
+            border-color: #f4b400;
+        }
+        .admin-filters .btn-filter i {
+            font-size: 0.8rem;
+        }
+        .admin-filters .btn-filter .badge-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0px 8px;
+            border-radius: 50px;
+            font-size: 0.75rem;
+        }
+        .admin-filters .btn-filter.active .badge-count {
+            background: rgba(255, 255, 255, 0.25);
         }
 
         #admin-ads-container {
@@ -829,11 +1114,24 @@
             justify-content: space-between;
             gap: 12px;
             transition: all 0.3s;
+            animation: fadeInItem 0.3s ease;
         }
         .admin-ad-item:hover {
             border-color: #f4b400;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
         }
+
+        @keyframes fadeInItem {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .admin-ad-item .info {
             flex: 1;
             min-width: 200px;
@@ -850,12 +1148,480 @@
             flex-wrap: wrap;
             gap: 12px;
         }
+        .admin-ad-item .info .meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .admin-ad-item .info .meta i {
+            color: #aaa;
+            width: 16px;
+        }
+        .admin-ad-item .info .date {
+            color: #999;
+            font-size: 0.8rem;
+        }
         .admin-ad-item .actions {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
+        .admin-ad-item .actions .btn {
+            font-size: 0.85rem;
+            padding: 8px 16px;
+            border-radius: 10px;
+        }
 
+        .admin-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .admin-empty i {
+            font-size: 3rem;
+            margin-bottom: 16px;
+            opacity: 0.3;
+        }
+        .admin-empty h3 {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        /* ---------- MODAL ANNONCE ---------- */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 3000;
+            flex-direction: column;
+            animation: modalFadeIn 0.4s ease;
+        }
+        .ad-modal.active {
+            display: flex;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .ad-modal-header {
+            background: linear-gradient(135deg, #f4b400, #e67e22);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            min-height: 72px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+        .ad-modal-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            padding-right: 20px;
+            flex: 1;
+            line-height: 1.3;
+        }
+        .ad-modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ad-modal-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .ad-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px;
+            background: #f0f2f5;
+        }
+        .ad-modal-body .price {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #e67e22;
+            margin: 16px 0 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .ad-modal-body .price i {
+            font-size: 1.6rem;
+        }
+        .ad-modal-body .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            background: white;
+            padding: 16px 20px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        .ad-modal-body .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #444;
+            font-size: 0.95rem;
+            padding: 4px 0;
+        }
+        .ad-modal-body .info-item i {
+            width: 22px;
+            color: #f4b400;
+            font-size: 1rem;
+        }
+        .ad-modal-body .info-item strong {
+            color: #1a1a2e;
+            margin-right: 4px;
+        }
+        .ad-modal-body .description {
+            background: white;
+            padding: 20px 24px;
+            border-radius: 16px;
+            margin: 0;
+            text-align: justify;
+            line-height: 1.8;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            font-size: 1rem;
+            color: #333;
+        }
+        .ad-modal-body .description strong {
+            display: block;
+            color: #1a1a2e;
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+        }
+
+        .ad-modal-footer {
+            background: white;
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            flex-shrink: 0;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+        }
+        .ad-modal-footer .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            min-width: 120px;
+            border-radius: 14px;
+        }
+        .ad-modal-footer .btn-secondary {
+            background: #e8e8e8;
+            color: #555;
+        }
+        .ad-modal-footer .btn-secondary:hover {
+            background: #d5d5d5;
+        }
+
+        /* ---------- CAROUSEL ---------- */
+        .carousel {
+            position: relative;
+            background: #1a1a2e;
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 8px;
+            min-height: 300px;
+        }
+        .carousel-images {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .carousel-images img {
+            width: 100%;
+            flex-shrink: 0;
+            min-height: 300px;
+            max-height: 420px;
+            object-fit: cover;
+            background: #2c3e50;
+        }
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.3s;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .carousel-btn:hover {
+            background: rgba(255, 255, 255, 0.45);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .carousel-btn.prev {
+            left: 16px;
+        }
+        .carousel-btn.next {
+            right: 16px;
+        }
+        .carousel-dots {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .carousel-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.35);
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+        .carousel-dots span.active {
+            background: #f4b400;
+            transform: scale(1.2);
+            border-color: #f4b400;
+        }
+        .carousel-no-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.2rem;
+            gap: 12px;
+        }
+        .carousel-no-image i {
+            font-size: 3.5rem;
+            opacity: 0.4;
+        }
+
+        /* ---------- MODAL PUBLICATION ---------- */
+        .publish-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 2000;
+            flex-direction: column;
+            animation: modalFadeIn 0.4s ease;
+        }
+        .publish-modal.active {
+            display: flex;
+        }
+
+        .publish-modal-header {
+            background: linear-gradient(135deg, #f4b400, #e67e22);
+            color: white;
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+            min-height: 72px;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
+        }
+        .publish-modal-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .publish-modal-close {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: 0.3s;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .publish-modal-close:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(90deg);
+        }
+
+        .publish-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 28px;
+            background: #f0f2f5;
+        }
+        .publish-modal-body .form-group {
+            margin-bottom: 18px;
+        }
+        .publish-modal-body .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .publish-modal-body .form-group input,
+        .publish-modal-body .form-group select,
+        .publish-modal-body .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fff;
+        }
+        .publish-modal-body .form-group input:focus,
+        .publish-modal-body .form-group select:focus,
+        .publish-modal-body .form-group textarea:focus {
+            outline: none;
+            border-color: #f4b400;
+            box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.15);
+        }
+        .publish-modal-body .form-group input.error,
+        .publish-modal-body .form-group select.error,
+        .publish-modal-body .form-group textarea.error {
+            border-color: #ff4444;
+            box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.15);
+        }
+        .publish-modal-body .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .publish-modal-body .form-group input[type="file"] {
+            padding: 10px;
+            background: #fafafa;
+            border-style: dashed;
+            border-color: #ccc;
+        }
+        .publish-modal-body .form-group input[type="file"]:hover {
+            border-color: #f4b400;
+            background: #fefaf0;
+        }
+
+        .publish-modal-footer {
+            background: white;
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            flex-shrink: 0;
+            border-top: 1px solid #e8e8e8;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+        }
+        .publish-modal-footer .btn {
+            flex: 1;
+            justify-content: center;
+            padding: 14px 20px;
+            font-size: 1.05rem;
+            border-radius: 14px;
+        }
+
+        /* ---------- MODAL LOGIN ---------- */
+        .login-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 2500;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .login-modal.active {
+            display: flex;
+        }
+        .login-modal-content {
+            background: #fff;
+            border-radius: 28px;
+            max-width: 420px;
+            width: 100%;
+            padding: 32px 28px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+            animation: modalIn 0.35s ease;
+        }
+        @keyframes modalIn {
+            from {
+                transform: scale(0.92) translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        .login-modal-content h2 {
+            color: #1a1a2e;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .login-modal-content .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 14px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: #fafafa;
+        }
+        .login-modal-content .form-group input:focus {
+            outline: none;
+            border-color: #f4b400;
+            box-shadow: 0 0 0 4px rgba(244, 180, 0, 0.15);
+        }
+        .login-modal-content .form-group input.error {
+            border-color: #ff4444;
+            box-shadow: 0 0 0 4px rgba(255, 68, 68, 0.15);
+        }
+
+        /* ---------- UTILITAIRES ---------- */
         .loading,
         .no-ads {
             text-align: center;
@@ -865,7 +1631,30 @@
             font-size: 1.05rem;
         }
 
-        /* --- RESPONSIVE --- */
+        /* ---------- BADGE CLOUD ---------- */
+        .cloud-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(40, 167, 69, 0.15);
+            color: #28a745;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+            margin-left: 8px;
+        }
+        .cloud-badge.offline {
+            background: rgba(220, 53, 69, 0.15);
+            color: #dc3545;
+            border-color: rgba(220, 53, 69, 0.2);
+        }
+        .cloud-badge i {
+            font-size: 0.6rem;
+        }
+
+        /* ---------- RESPONSIVE ---------- */
         @media (max-width: 480px) {
             .landing-title {
                 font-size: 2rem;
@@ -880,6 +1669,9 @@
                 grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
                 gap: 8px;
             }
+            .category-card .icon {
+                font-size: 1.8rem;
+            }
             #ads-container {
                 grid-template-columns: 1fr;
                 padding: 12px;
@@ -892,9 +1684,45 @@
                 font-size: 0.85rem;
                 padding: 8px 12px;
             }
+            .admin-ad-item {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .admin-ad-item .actions {
+                justify-content: stretch;
+            }
+            .admin-ad-item .actions .btn {
+                flex: 1;
+                justify-content: center;
+            }
+            .landing-btn {
+                padding: 14px 32px;
+                font-size: 1rem;
+            }
+            .ad-modal-header h2 {
+                font-size: 1rem;
+            }
+            .ad-modal-footer .btn {
+                font-size: 0.9rem;
+                padding: 12px 16px;
+            }
+            .carousel {
+                min-height: 200px;
+            }
+            .carousel-images img {
+                min-height: 200px;
+                max-height: 280px;
+            }
+            .carousel-no-image {
+                min-height: 200px;
+            }
             .fixed-footer {
                 font-size: 0.75rem;
                 padding: 10px 12px;
+            }
+            .fixed-footer .contact-link {
+                font-size: 0.75rem;
+                padding: 3px 10px;
             }
             body {
                 padding-bottom: 85px;
@@ -902,6 +1730,21 @@
             .container {
                 margin-bottom: 20px;
                 min-height: calc(100vh - 150px);
+            }
+            .ads-view-header .stats .view-options button {
+                padding: 4px 8px;
+                font-size: 0.8rem;
+            }
+            .ads-view-header .stats .count-badge {
+                font-size: 0.8rem;
+                padding: 4px 12px;
+            }
+            .ads-view-header .header-content .title-group h2 {
+                font-size: 1rem;
+            }
+            .ad-card .card-body .ad-footer-actions .btn {
+                font-size: 0.7rem;
+                padding: 4px 8px;
             }
             .ads-view-header {
                 padding: 12px 12px;
@@ -918,19 +1761,136 @@
                 justify-content: space-between;
                 width: 100%;
             }
-            .modal-body {
-                padding: 16px 16px;
+            .ads-quick-filters {
+                padding: 10px 12px;
+                gap: 4px;
             }
+            .ads-quick-filters .filter-chip {
+                font-size: 0.7rem;
+                padding: 3px 10px;
+            }
+            #ads-container {
+                padding: 12px;
+                gap: 12px;
+            }
+            .container {
+                border-radius: 16px;
+            }
+            .hero h2 {
+                font-size: 1.2rem;
+            }
+            .hero p {
+                font-size: 0.9rem;
+            }
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            .publish-modal-body {
+                padding: 16px;
+            }
+            .publish-modal-header h2 {
+                font-size: 1.1rem;
+            }
+            .publish-modal-footer .btn {
+                font-size: 0.9rem;
+                padding: 12px 16px;
+            }
+
+            .contact-modal-body {
+                padding: 16px 12px;
+            }
+            .contact-modal-body .contact-form-container {
+                padding: 0;
+            }
+            .contact-modal-header {
+                padding: 14px 16px;
+                min-height: 60px;
+            }
+            .contact-modal-header h2 {
+                font-size: 1rem;
+            }
+            .contact-modal-header h2 i {
+                padding: 6px;
+                font-size: 0.9rem;
+            }
+            .contact-modal-header .contact-modal-close {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .contact-modal-body .form-title {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            .contact-modal-body .form-group {
+                margin-bottom: 16px;
+            }
+            .contact-modal-body .form-group label {
+                font-size: 0.85rem;
+            }
+            .contact-modal-body .form-group input,
+            .contact-modal-body .form-group select,
+            .contact-modal-body .form-group textarea {
+                padding: 12px 14px;
+                padding-right: 45px;
+                font-size: 0.9rem;
+            }
+            .contact-modal-body .form-group .input-icon {
+                font-size: 1rem;
+                right: 8px;
+            }
+            .contact-modal-body .form-group textarea {
+                min-height: 80px;
+            }
+            .contact-modal-footer {
+                padding: 4px 16px 20px;
+                gap: 10px;
+            }
+            .contact-modal-footer .btn {
+                font-size: 0.85rem;
+                padding: 13px 16px;
+                min-width: 100px;
+                border-radius: 12px;
+            }
+            .contact-error-message {
+                font-size: 0.85rem;
+                padding: 10px 14px;
+            }
+
             .admin-header {
                 padding: 16px 16px;
                 flex-direction: column;
                 align-items: stretch;
                 gap: 10px;
             }
+            .admin-header h2 {
+                font-size: 1.2rem;
+            }
+            .admin-header .admin-stats {
+                justify-content: space-between;
+            }
+            .admin-header .admin-stats .stat-badge {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
             .admin-filters {
                 padding: 12px 16px;
                 flex-direction: column;
                 align-items: stretch;
+            }
+            .admin-filters .filter-label {
+                font-size: 0.8rem;
+            }
+            .admin-filters select {
+                font-size: 0.85rem;
+                padding: 8px 12px;
+                min-width: 100%;
+            }
+            .admin-filters .btn-filter {
+                font-size: 0.8rem;
+                padding: 6px 14px;
+                justify-content: center;
             }
             #admin-ads-container {
                 padding: 12px;
@@ -939,60 +1899,195 @@
                 flex-direction: column;
                 gap: 4px;
             }
-            .modal-footer {
-                flex-direction: column;
+            .admin-ad-item .info .meta span {
+                font-size: 0.8rem;
             }
-            .modal-footer .btn {
-                width: 100%;
-                min-width: unset;
+
+            .login-modal-content {
+                padding: 20px 16px;
             }
-            .modal-header h2 {
-                font-size: 1.1rem;
+            .login-modal-content h2 {
+                font-size: 1.3rem;
+            }
+            .ad-modal-body {
+                padding: 16px;
+            }
+            .ad-modal-body .info-grid {
+                grid-template-columns: 1fr;
+                padding: 12px 16px;
+            }
+            .ad-modal-body .price {
+                font-size: 1.8rem;
+            }
+            .ad-modal-body .description {
+                padding: 16px;
+                font-size: 0.95rem;
+            }
+            .ad-modal-header {
+                padding: 14px 16px;
+                min-height: 60px;
+            }
+            .ad-modal-header h2 {
+                font-size: 1rem;
+                padding-right: 12px;
+            }
+            .ad-modal-close {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+            .ad-modal-footer {
+                padding: 12px 16px;
+            }
+            .ad-modal-footer .btn {
+                font-size: 0.85rem;
+                padding: 10px 14px;
+                min-width: 80px;
+            }
+            .carousel {
+                min-height: 180px;
+            }
+            .carousel-images img {
+                min-height: 180px;
+                max-height: 240px;
+            }
+            .carousel-no-image {
+                min-height: 180px;
+                font-size: 1rem;
+            }
+            .carousel-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.9rem;
+            }
+            .carousel-dots span {
+                width: 8px;
+                height: 8px;
+            }
+            .carousel-btn.prev {
+                left: 8px;
+            }
+            .carousel-btn.next {
+                right: 8px;
             }
         }
 
-        /* SweetAlert2 z-index */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .ads-view-header {
+                padding: 16px 16px;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+            .ads-view-header .header-content .category-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.5rem;
+            }
+            .ads-view-header .header-content .title-group h2 {
+                font-size: 1.2rem;
+            }
+            .ads-view-header .stats {
+                justify-content: space-between;
+                width: 100%;
+            }
+            .ads-quick-filters {
+                padding: 12px 16px;
+                gap: 6px;
+            }
+            .ads-quick-filters .filter-chip {
+                font-size: 0.75rem;
+                padding: 4px 12px;
+            }
+            #ads-container {
+                padding: 16px;
+                gap: 16px;
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+            #ads-container.list-view .ad-card {
+                flex-direction: column;
+            }
+            #ads-container.list-view .ad-card .image-wrapper {
+                width: 100%;
+                height: 180px;
+            }
+            .ad-card .image-wrapper {
+                height: 160px;
+            }
+            .ad-modal-body .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .ad-modal-body {
+                padding: 16px;
+            }
+            .ad-modal-header h2 {
+                font-size: 1.1rem;
+            }
+            .publish-modal-body {
+                padding: 16px;
+            }
+            .publish-modal-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .contact-modal-body {
+                padding: 20px 16px;
+            }
+            .contact-modal-body .contact-form-container {
+                padding: 0;
+            }
+            .contact-modal-header h2 {
+                font-size: 1.1rem;
+            }
+            .contact-modal-footer .btn {
+                min-width: 110px;
+                font-size: 0.9rem;
+                padding: 14px 18px;
+            }
+
+            .admin-header {
+                padding: 16px 20px;
+            }
+            .admin-header h2 {
+                font-size: 1.3rem;
+            }
+            .admin-filters {
+                padding: 12px 20px;
+            }
+            #admin-ads-container {
+                padding: 16px 20px;
+            }
+
+            .fixed-footer {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+            }
+            body {
+                padding-bottom: 85px;
+            }
+            .container {
+                margin-bottom: 25px;
+                min-height: calc(100vh - 170px);
+            }
+        }
+
+        /* SweetAlert2 personnalisation */
         .swal2-container {
             z-index: 99999 !important;
         }
-
-        /* --- Style pour l'affichage de l'annonce dans la modale --- */
-        .ad-detail-image {
-            width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 12px;
+        .swal2-popup-custom {
+            background: #0a1628 !important;
+            color: #fff !important;
+            border: 1px solid rgba(244, 180, 0, 0.2) !important;
         }
-        .ad-detail-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            background: #f8f9fa;
-            padding: 16px;
-            border-radius: 12px;
-            margin: 12px 0;
+        .swal2-popup-custom .swal2-title {
+            color: #f4b400 !important;
         }
-        .ad-detail-description {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 12px;
-            text-align: justify;
-            line-height: 1.8;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        .swal2-popup-custom .swal2-html-container {
+            color: #ccc !important;
         }
-        .ad-detail-price {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #e67e22;
-            margin: 12px 0;
-        }
-        @media (max-width: 480px) {
-            .ad-detail-grid {
-                grid-template-columns: 1fr;
-            }
-            .ad-detail-price {
-                font-size: 1.5rem;
-            }
+        .swal2-popup-custom .swal2-confirm {
+            background: #28a745 !important;
         }
     </style>
 </head>
@@ -1018,10 +2113,15 @@
                 <i class="fas fa-lock"></i>
             </button>
             <h1><i class="fas fa-store-alt"></i> MarketPlace</h1>
-            <p>Bienvenue sur MarketPlace, votre plateforme d'annonces gratuite !</p>
+            <p>
+                Bienvenue sur MarketPlace, votre plateforme d'annonces gratuite !
+                <span class="cloud-badge" id="cloud-status">
+                    <i class="fas fa-cloud"></i> Cloud
+                </span>
+            </p>
         </header>
 
-        <!-- VUE PRINCIPALE -->
+        <!-- VUE PRINCIPALE (Catégories) -->
         <div id="main-view">
             <div class="hero">
                 <h2><i class="fas fa-plus-circle"></i> Déposez vos annonces gratuitement</h2>
@@ -1031,6 +2131,7 @@
                 </button>
             </div>
 
+            <!-- FILTRES -->
             <div class="filters">
                 <select id="filter-category" onchange="showCategoryAds()">
                     <option value="">📋 Toutes catégories</option>
@@ -1105,6 +2206,7 @@
                 </select>
             </div>
 
+            <!-- CATÉGORIES RAPIDES -->
             <div class="categories" id="categoriesGrid">
                 <div class="category-card" onclick="selectCategory('Véhicules')"><div class="icon">🚗</div><div class="name">Véhicules</div></div>
                 <div class="category-card" onclick="selectCategory('Électronique')"><div class="icon">📱</div><div class="name">Électronique</div></div>
@@ -1145,27 +2247,58 @@
                 </div>
                 <div class="stats">
                     <span class="count-badge" id="ads-count">0 annonces</span>
+                    <div class="view-options">
+                        <button class="active" onclick="toggleView('grid')" title="Grille"><i class="fas fa-th"></i></button>
+                        <button onclick="toggleView('list')" title="Liste"><i class="fas fa-list"></i></button>
+                    </div>
                 </div>
             </div>
+
+            <div class="ads-quick-filters" id="quick-filters">
+                <span class="label"><i class="fas fa-filter"></i> Filtres :</span>
+                <span class="filter-chip active" data-filter="all" onclick="applyQuickFilter('all')">
+                    Tous <span class="count" id="filter-all-count">0</span>
+                </span>
+                <span class="filter-chip" data-filter="recent" onclick="applyQuickFilter('recent')">
+                    <i class="fas fa-clock"></i> Récents
+                </span>
+                <span class="filter-chip" data-filter="price-low" onclick="applyQuickFilter('price-low')">
+                    <i class="fas fa-arrow-up"></i> Prix croissant
+                </span>
+                <span class="filter-chip" data-filter="price-high" onclick="applyQuickFilter('price-high')">
+                    <i class="fas fa-arrow-down"></i> Prix décroissant
+                </span>
+            </div>
+
             <div id="ads-container">
                 <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement des annonces...</div>
             </div>
         </div>
 
-        <!-- PANNEAU ADMIN -->
+        <!-- ========================================== -->
+        <!-- PANNEAU ADMIN AVEC FILTRES                 -->
+        <!-- ========================================== -->
         <div id="admin-panel" class="admin-panel">
+            <!-- En-tête Admin -->
             <div class="admin-header">
                 <h2><i class="fas fa-user-shield"></i> Panneau Admin</h2>
                 <div class="admin-stats">
                     <span class="stat-badge">
                         <i class="fas fa-list"></i> Total : <strong id="admin-total-count">0</strong>
                     </span>
+                    <span class="stat-badge">
+                        <i class="fas fa-tag"></i> Catégories : <strong id="admin-cat-count">0</strong>
+                    </span>
                     <button class="btn btn-secondary btn-sm" onclick="closeAdmin()">
                         <i class="fas fa-sign-out-alt"></i> Quitter
                     </button>
                 </div>
             </div>
-            <div class="admin-filters">
+
+            <!-- Filtres Admin -->
+            <div class="admin-filters" id="admin-filters">
+                <span class="filter-label"><i class="fas fa-sliders-h"></i> Filtres :</span>
+
                 <select id="admin-filter-category" onchange="applyAdminFilters()">
                     <option value="">📋 Toutes catégories</option>
                     <option value="Véhicules">🚗 Véhicules</option>
@@ -1190,6 +2323,7 @@
                     <option value="Jeux vidéo">🕹️ Jeux vidéo</option>
                     <option value="Autre">📦 Autre</option>
                 </select>
+
                 <select id="admin-filter-city" onchange="applyAdminFilters()">
                     <option value="">🏙 Toutes villes</option>
                     <option value="Casablanca">Casablanca</option>
@@ -1236,13 +2370,22 @@
                     <option value="Smara">Smara</option>
                     <option value="Autre">Autre</option>
                 </select>
-                <button class="btn btn-secondary btn-sm" onclick="applyAdminFilters()">
-                    <i class="fas fa-search"></i> Filtrer
+
+                <button class="btn-filter" onclick="applyAdminFilters()">
+                    <i class="fas fa-search"></i> Appliquer
                 </button>
-                <button class="btn btn-secondary btn-sm" onclick="resetAdminFilters()">
+                <button class="btn-filter" onclick="resetAdminFilters()">
                     <i class="fas fa-undo"></i> Réinitialiser
                 </button>
+                <button class="btn-filter" onclick="sortAdminByDate()">
+                    <i class="fas fa-sort-amount-down"></i> Date
+                </button>
+                <button class="btn-filter" onclick="sortAdminByPrice()">
+                    <i class="fas fa-sort-amount-up-alt"></i> Prix
+                </button>
             </div>
+
+            <!-- Liste des annonces admin -->
             <div id="admin-ads-container">
                 <div class="loading"><i class="fas fa-spinner fa-spin"></i> Chargement...</div>
             </div>
@@ -1260,251 +2403,252 @@
         </div>
     </div>
 
-    <!-- ========================================================== -->
-    <!-- ========== MODALES PLEIN ÉCRAN ============================ -->
-    <!-- ========================================================== -->
-
-    <!-- MODALE PUBLICATION -->
-    <div id="publish-modal" class="modal-overlay">
-        <div class="modal-fullscreen">
-            <!-- Header -->
-            <div class="modal-header">
-                <h2><i class="fas fa-pen-fancy"></i> Publier une annonce</h2>
-                <button class="modal-close" onclick="closePublishModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <!-- Body -->
-            <div class="modal-body">
-                <form id="publish-form" onsubmit="event.preventDefault(); submitAd(this);">
-                    <div class="form-group">
-                        <label>Titre *</label>
-                        <input type="text" name="titre" id="pub-titre" required placeholder="Ex: iPhone 13 Pro Max">
-                    </div>
-                    <div class="form-group">
-                        <label>Catégorie *</label>
-                        <select name="categorie" id="pub-categorie" required>
-                            <option value="">-- Choisir --</option>
-                            <option value="Véhicules">🚗 Véhicules</option>
-                            <option value="Électronique">📱 Électronique</option>
-                            <option value="Immobilier">🏠 Immobilier</option>
-                            <option value="Emploi">💼 Emploi</option>
-                            <option value="Services">🛠 Services</option>
-                            <option value="Mode">👗 Mode</option>
-                            <option value="Maison & Jardin">🏡 Maison & Jardin</option>
-                            <option value="Animaux">🐾 Animaux</option>
-                            <option value="Loisirs">🎮 Loisirs</option>
-                            <option value="Sport">⚽ Sport</option>
-                            <option value="Meubles">🪑 Meubles</option>
-                            <option value="Informatique">💻 Informatique</option>
-                            <option value="Téléphonie">📞 Téléphonie</option>
-                            <option value="Bricolage">🔧 Bricolage</option>
-                            <option value="Jardinage">🌱 Jardinage</option>
-                            <option value="Alimentation">🍎 Alimentation</option>
-                            <option value="Livres">📚 Livres</option>
-                            <option value="Musique">🎵 Musique</option>
-                            <option value="Cinéma">🎬 Cinéma</option>
-                            <option value="Jeux vidéo">🕹️ Jeux vidéo</option>
-                            <option value="Autre">📦 Autre</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Ville *</label>
-                        <select name="ville" id="pub-ville" required>
-                            <option value="">-- Choisir --</option>
-                            <option value="Casablanca">Casablanca</option>
-                            <option value="Rabat">Rabat</option>
-                            <option value="Marrakech">Marrakech</option>
-                            <option value="Tanger">Tanger</option>
-                            <option value="Fès">Fès</option>
-                            <option value="Agadir">Agadir</option>
-                            <option value="Meknès">Meknès</option>
-                            <option value="Oujda">Oujda</option>
-                            <option value="Tétouan">Tétouan</option>
-                            <option value="Kénitra">Kénitra</option>
-                            <option value="Salé">Salé</option>
-                            <option value="Nador">Nador</option>
-                            <option value="Safi">Safi</option>
-                            <option value="Beni Mellal">Beni Mellal</option>
-                            <option value="El Jadida">El Jadida</option>
-                            <option value="Taza">Taza</option>
-                            <option value="Settat">Settat</option>
-                            <option value="Larache">Larache</option>
-                            <option value="Khemisset">Khemisset</option>
-                            <option value="Khouribga">Khouribga</option>
-                            <option value="Ouarzazate">Ouarzazate</option>
-                            <option value="Laâyoune">Laâyoune</option>
-                            <option value="Dakhla">Dakhla</option>
-                            <option value="Essaouira">Essaouira</option>
-                            <option value="Chefchaouen">Chefchaouen</option>
-                            <option value="Azrou">Azrou</option>
-                            <option value="Ifrane">Ifrane</option>
-                            <option value="Midelt">Midelt</option>
-                            <option value="Errachidia">Errachidia</option>
-                            <option value="Guercif">Guercif</option>
-                            <option value="Sidi Kacem">Sidi Kacem</option>
-                            <option value="Sidi Slimane">Sidi Slimane</option>
-                            <option value="Berrechid">Berrechid</option>
-                            <option value="Mohammédia">Mohammédia</option>
-                            <option value="Témara">Témara</option>
-                            <option value="Aït Melloul">Aït Melloul</option>
-                            <option value="Inezgane">Inezgane</option>
-                            <option value="Tiznit">Tiznit</option>
-                            <option value="Zagora">Zagora</option>
-                            <option value="Tan-Tan">Tan-Tan</option>
-                            <option value="Boujdour">Boujdour</option>
-                            <option value="Smara">Smara</option>
-                            <option value="Autre">Autre</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Description *</label>
-                        <textarea name="description" id="pub-description" required placeholder="Décrivez votre annonce en détail..."></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label>Prix (DH) *</label>
-                        <input type="number" name="prix" id="pub-prix" required placeholder="Ex: 5000">
-                    </div>
-                    <div class="form-group">
-                        <label>Contact (Téléphone) *</label>
-                        <input type="tel" name="contact" id="pub-contact" required placeholder="Ex: 0612345678">
-                    </div>
-                    <div class="form-group">
-                        <label>Images (jusqu'à 4)</label>
-                        <input type="file" name="image1" accept="image/*">
-                        <input type="file" name="image2" accept="image/*" style="margin-top:8px;">
-                        <input type="file" name="image3" accept="image/*" style="margin-top:8px;">
-                        <input type="file" name="image4" accept="image/*" style="margin-top:8px;">
-                    </div>
-                </form>
-            </div>
-            <!-- Footer -->
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closePublishModal()">
-                    <i class="fas fa-times"></i> Annuler
-                </button>
-                <button class="btn btn-primary" onclick="document.getElementById('publish-form').requestSubmit();">
-                    <i class="fas fa-rocket"></i> Publier
-                </button>
-            </div>
+    <!-- ========== MODALE CONTACT ========== -->
+    <div id="contact-modal" class="contact-modal">
+        <div class="contact-modal-header">
+            <h2><i class="fas fa-headset"></i> Contacter l'Admin</h2>
+            <button class="contact-modal-close" onclick="closeContactModal()">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-    </div>
-
-    <!-- MODALE CONTACT -->
-    <div id="contact-modal" class="modal-overlay">
-        <div class="modal-fullscreen">
-            <!-- Header -->
-            <div class="modal-header">
-                <h2><i class="fas fa-headset"></i> Contacter l'Admin</h2>
-                <button class="modal-close" onclick="closeContactModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <!-- Body -->
-            <div class="modal-body">
+        <div class="contact-modal-body">
+            <div class="contact-form-container">
+                <div class="form-title">
+                    <i class="fas fa-pen-fancy"></i> <strong>Remplissez le formulaire pour nous contacter</strong>
+                </div>
+                <div class="contact-error-message" id="contact-error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="contact-error-text">Veuillez remplir tous les champs du formulaire.</span>
+                </div>
                 <form id="contact-form" onsubmit="event.preventDefault(); sendContactMessage();">
                     <div class="form-group">
-                        <label>Votre Nom *</label>
-                        <input type="text" id="contact-name" required placeholder="Ex: M.Seddik ELidrissi">
+                        <label><i class="fas fa-user"></i> Votre Nom *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="contact-name" required placeholder="Ex: M.Seddik ELidrissi">
+                            <span class="input-icon" id="icon-name"><i class="fas fa-check-circle"></i></span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Votre N° de Téléphone *</label>
-                        <input type="tel" id="contact-phone" required placeholder="Ex: 0612345678">
+                        <label><i class="fas fa-phone"></i> Votre N° de Téléphone *</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="contact-phone" required placeholder="Ex: 0612345678">
+                            <span class="input-icon" id="icon-phone"><i class="fas fa-check-circle"></i></span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Objet *</label>
-                        <select id="contact-subject" required>
-                            <option value="">-- Choisir un objet --</option>
-                            <option value="Question">❓ Question</option>
-                            <option value="Suggestion">💡 Suggestion</option>
-                            <option value="Réclamation">⚠️ Réclamation</option>
-                            <option value="Autre">📦 Autre</option>
-                        </select>
+                        <label><i class="fas fa-tag"></i> Objet *</label>
+                        <div class="input-wrapper">
+                            <select id="contact-subject" required>
+                                <option value="">-- Choisir un objet --</option>
+                                <option value="Question">❓ Question</option>
+                                <option value="Suggestion">💡 Suggestion</option>
+                                <option value="Réclamation">⚠️ Réclamation</option>
+                                <option value="Autre">📦 Autre</option>
+                            </select>
+                            <span class="input-icon" id="icon-subject"><i class="fas fa-check-circle"></i></span>
+                        </div>
                     </div>
                     <div class="form-group">
-                        <label>Message *</label>
-                        <textarea id="contact-message" required placeholder="Décrivez votre demande en détail..."></textarea>
+                        <label><i class="fas fa-comment"></i> Message *</label>
+                        <div class="input-wrapper">
+                            <textarea id="contact-message" required placeholder="Décrivez votre demande en détail..."></textarea>
+                            <span class="input-icon" id="icon-message"><i class="fas fa-check-circle"></i></span>
+                        </div>
                     </div>
                 </form>
             </div>
-            <!-- Footer -->
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeContactModal()">
-                    <i class="fas fa-times"></i> Fermer
-                </button>
-                <button class="btn btn-success" onclick="document.getElementById('contact-form').requestSubmit();">
-                    <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
-                </button>
-            </div>
+        </div>
+        <div class="contact-modal-footer">
+            <button class="btn btn-close-red" onclick="closeContactModal()">
+                <i class="fas fa-times"></i> Fermer
+            </button>
+            <button class="btn btn-send" form="contact-form" type="submit">
+                <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+            </button>
         </div>
     </div>
 
-    <!-- MODALE LOGIN ADMIN -->
-    <div id="admin-login-modal" class="modal-overlay">
-        <div class="modal-fullscreen">
-            <!-- Header -->
-            <div class="modal-header">
-                <h2><i class="fas fa-lock"></i> Accès Admin</h2>
-                <button class="modal-close" onclick="closeAdminLogin()"><i class="fas fa-times"></i></button>
-            </div>
-            <!-- Body -->
-            <div class="modal-body" style="display:flex; align-items:center; justify-content:center;">
-                <div style="max-width:400px; width:100%;">
-                    <form onsubmit="event.preventDefault(); loginAdmin();">
-                        <div class="form-group">
-                            <label>Mot de passe</label>
-                            <input type="password" id="admin-password" required placeholder="Entrez le mot de passe" style="font-size:1.2rem; padding:14px 18px;">
-                        </div>
-                    </form>
+    <!-- ========== MODALE PUBLICATION ========== -->
+    <div id="publish-modal" class="publish-modal">
+        <div class="publish-modal-header">
+            <h2><i class="fas fa-pen-fancy"></i> Publier une annonce</h2>
+            <button class="publish-modal-close" onclick="closePublishModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="publish-modal-body">
+            <form id="publish-form" onsubmit="event.preventDefault(); submitAd(this);">
+                <div class="form-group">
+                    <label><i class="fas fa-heading"></i> Titre *</label>
+                    <input type="text" name="titre" id="pub-titre" required placeholder="Ex: iPhone 13 Pro Max">
                 </div>
-            </div>
-            <!-- Footer -->
-            <div class="modal-footer" style="justify-content:center;">
-                <button class="btn btn-secondary" onclick="closeAdminLogin()">
-                    <i class="fas fa-times"></i> Annuler
-                </button>
-                <button class="btn btn-primary" onclick="loginAdmin();">
+                <div class="form-group">
+                    <label><i class="fas fa-tag"></i> Catégorie *</label>
+                    <select name="categorie" id="pub-categorie" required>
+                        <option value="">-- Choisir --</option>
+                        <option value="Véhicules">🚗 Véhicules</option>
+                        <option value="Électronique">📱 Électronique</option>
+                        <option value="Immobilier">🏠 Immobilier</option>
+                        <option value="Emploi">💼 Emploi</option>
+                        <option value="Services">🛠 Services</option>
+                        <option value="Mode">👗 Mode</option>
+                        <option value="Maison & Jardin">🏡 Maison & Jardin</option>
+                        <option value="Animaux">🐾 Animaux</option>
+                        <option value="Loisirs">🎮 Loisirs</option>
+                        <option value="Sport">⚽ Sport</option>
+                        <option value="Meubles">🪑 Meubles</option>
+                        <option value="Informatique">💻 Informatique</option>
+                        <option value="Téléphonie">📞 Téléphonie</option>
+                        <option value="Bricolage">🔧 Bricolage</option>
+                        <option value="Jardinage">🌱 Jardinage</option>
+                        <option value="Alimentation">🍎 Alimentation</option>
+                        <option value="Livres">📚 Livres</option>
+                        <option value="Musique">🎵 Musique</option>
+                        <option value="Cinéma">🎬 Cinéma</option>
+                        <option value="Jeux vidéo">🕹️ Jeux vidéo</option>
+                        <option value="Autre">📦 Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-map-marker-alt"></i> Ville *</label>
+                    <select name="ville" id="pub-ville" required>
+                        <option value="">-- Choisir --</option>
+                        <option value="Casablanca">Casablanca</option>
+                        <option value="Rabat">Rabat</option>
+                        <option value="Marrakech">Marrakech</option>
+                        <option value="Tanger">Tanger</option>
+                        <option value="Fès">Fès</option>
+                        <option value="Agadir">Agadir</option>
+                        <option value="Meknès">Meknès</option>
+                        <option value="Oujda">Oujda</option>
+                        <option value="Tétouan">Tétouan</option>
+                        <option value="Kénitra">Kénitra</option>
+                        <option value="Salé">Salé</option>
+                        <option value="Nador">Nador</option>
+                        <option value="Safi">Safi</option>
+                        <option value="Beni Mellal">Beni Mellal</option>
+                        <option value="El Jadida">El Jadida</option>
+                        <option value="Taza">Taza</option>
+                        <option value="Settat">Settat</option>
+                        <option value="Larache">Larache</option>
+                        <option value="Khemisset">Khemisset</option>
+                        <option value="Khouribga">Khouribga</option>
+                        <option value="Ouarzazate">Ouarzazate</option>
+                        <option value="Laâyoune">Laâyoune</option>
+                        <option value="Dakhla">Dakhla</option>
+                        <option value="Essaouira">Essaouira</option>
+                        <option value="Chefchaouen">Chefchaouen</option>
+                        <option value="Azrou">Azrou</option>
+                        <option value="Ifrane">Ifrane</option>
+                        <option value="Midelt">Midelt</option>
+                        <option value="Errachidia">Errachidia</option>
+                        <option value="Guercif">Guercif</option>
+                        <option value="Sidi Kacem">Sidi Kacem</option>
+                        <option value="Sidi Slimane">Sidi Slimane</option>
+                        <option value="Berrechid">Berrechid</option>
+                        <option value="Mohammédia">Mohammédia</option>
+                        <option value="Témara">Témara</option>
+                        <option value="Aït Melloul">Aït Melloul</option>
+                        <option value="Inezgane">Inezgane</option>
+                        <option value="Tiznit">Tiznit</option>
+                        <option value="Zagora">Zagora</option>
+                        <option value="Tan-Tan">Tan-Tan</option>
+                        <option value="Boujdour">Boujdour</option>
+                        <option value="Smara">Smara</option>
+                        <option value="Autre">Autre</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-align-left"></i> Description *</label>
+                    <textarea name="description" id="pub-description" required placeholder="Décrivez votre annonce en détail..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-money-bill-wave"></i> Prix (DH) *</label>
+                    <input type="number" name="prix" id="pub-prix" required placeholder="Ex: 5000">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Contact (Téléphone) *</label>
+                    <input type="tel" name="contact" id="pub-contact" required placeholder="Ex: 0612345678">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-images"></i> Images (jusqu'à 4)</label>
+                    <input type="file" name="image1" accept="image/*">
+                    <input type="file" name="image2" accept="image/*" style="margin-top:8px;">
+                    <input type="file" name="image3" accept="image/*" style="margin-top:8px;">
+                    <input type="file" name="image4" accept="image/*" style="margin-top:8px;">
+                </div>
+            </form>
+        </div>
+        <div class="publish-modal-footer">
+            <button class="btn btn-secondary" onclick="closePublishModal()"><i class="fas fa-times"></i> Annuler</button>
+            <button class="btn btn-primary" form="publish-form" type="submit">
+                <i class="fas fa-rocket"></i> Publier l'annonce
+            </button>
+        </div>
+    </div>
+
+    <!-- ========== MODAL LOGIN ADMIN ========== -->
+    <div id="admin-login-modal" class="login-modal">
+        <div class="login-modal-content">
+            <h2><i class="fas fa-lock"></i> Accès Admin</h2>
+            <form onsubmit="event.preventDefault(); loginAdmin();">
+                <div class="form-group">
+                    <label><i class="fas fa-key"></i> Mot de passe</label>
+                    <input type="password" id="admin-password" required placeholder="Entrez le mot de passe">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;">
                     <i class="fas fa-sign-in-alt"></i> Se connecter
                 </button>
-            </div>
+                <button type="button" class="btn btn-secondary" style="width:100%; margin-top:8px;" onclick="closeAdminLogin()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- MODALE ANNONCE (Détail) -->
-    <div id="ad-modal" class="modal-overlay">
-        <div class="modal-fullscreen">
-            <!-- Header -->
-            <div class="modal-header">
-                <h2 id="ad-modal-title"><i class="fas fa-file-alt"></i> Détail de l'annonce</h2>
-                <button class="modal-close" onclick="closeAdModal()"><i class="fas fa-times"></i></button>
-            </div>
-            <!-- Body -->
-            <div class="modal-body" id="ad-modal-body">
-                <!-- Contenu généré par JavaScript -->
-            </div>
-            <!-- Footer -->
-            <div class="modal-footer" id="ad-modal-footer">
-                <!-- Contenu généré par JavaScript -->
-            </div>
+    <!-- ========== MODAL ANNONCE ========== -->
+    <div id="ad-modal" class="ad-modal">
+        <div class="ad-modal-header">
+            <h2 id="ad-modal-title">Titre de l'annonce</h2>
+            <button class="ad-modal-close" onclick="closeAdModal()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="ad-modal-body" id="ad-modal-body">
+            <!-- Contenu généré par JS -->
+        </div>
+        <div class="ad-modal-footer" id="ad-modal-footer">
+            <!-- Boutons générés par JS -->
         </div>
     </div>
-
 
     <!-- ========================================== -->
     <!-- JAVASCRIPT                                 -->
     <!-- ========================================== -->
     <script>
-        // ============================================================
-        // CONFIGURATION - METTRE À JOUR AVEC VOTRE URL
-        // ============================================================
-        const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx1R3wqgUi3tq_Z7pg_1LM90Q78embijtva3MC1RSViwXFwR00JTtuRl7Fc8k52I9lq8A/exec";
-
+        // ==========================================
+        // CONFIGURATION
+        // ==========================================
         const ADMIN_PASSWORD = "Seddik";
         const STORAGE_KEY = 'marketplace_ads';
         const WHATSAPP_ADMIN = "212608975435";
 
+        // ==========================================
+        // CONFIGURATION CLOUD - À MODIFIER
+        // ==========================================
+        const CLOUD_CONFIG = {
+            // ⚠️ REMPLACEZ AVEC L'URL DE VOTRE SCRIPT GAS
+            API_URL: 'https://script.google.com/macros/s/AKfycbwOV5FKco5JoWD5D4JBvn-JkYal-_NrCWQtTsi4dmhOeREPkydL_B9RK_e9voPSWyyh/exec',
+            USE_GET: false // Utiliser GET ou POST
+        };
+
         let allAds = [];
         let currentCarouselIndex = 0;
         let currentCarouselImages = [];
+        let currentViewMode = 'grid';
         let currentFilteredAds = [];
+        let currentQuickFilter = 'all';
+        let cloudConnected = false;
+
+        // Variables pour les filtres admin
         let adminAllAds = [];
-        let isOnline = true;
+        let adminFilteredAds = [];
 
         const categoryIcons = {
             'Véhicules': '🚗',
@@ -1530,21 +2674,9 @@
             'Autre': '📦'
         };
 
-        // ============================================================
-        // FONCTIONS UTILITAIRES
-        // ============================================================
-        function showSuccessAlert(message) {
-            return Swal.fire({
-                icon: 'success',
-                title: '✅ Succès',
-                text: message,
-                confirmButtonColor: '#28a745',
-                confirmButtonText: 'OK',
-                timer: 2500,
-                timerProgressBar: true
-            });
-        }
-
+        // ==========================================
+        // FONCTIONS UTILITAIRES POUR LES ALERTES
+        // ==========================================
         function showErrorAlert(message) {
             return Swal.fire({
                 icon: 'error',
@@ -1552,6 +2684,18 @@
                 text: message,
                 confirmButtonColor: '#dc3545',
                 confirmButtonText: 'OK'
+            });
+        }
+
+        function showSuccessAlert(message) {
+            return Swal.fire({
+                icon: 'success',
+                title: '✅ Succès',
+                text: message,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'OK',
+                timer: 2000,
+                timerProgressBar: true
             });
         }
 
@@ -1565,53 +2709,293 @@
             });
         }
 
-        function showInfoAlert(message) {
+        function showThankYouAlert() {
             return Swal.fire({
-                icon: 'info',
-                title: 'ℹ️ Information',
-                text: message,
-                confirmButtonColor: '#17a2b8',
-                confirmButtonText: 'OK'
+                icon: 'success',
+                title: '🙏 Merci !',
+                text: 'Votre message a été envoyé avec succès. Nous vous répondrons dans les plus brefs délais.',
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'OK',
+                background: '#0a1628',
+                color: '#fff',
+                iconColor: '#28a745',
+                backdrop: 'rgba(10,20,40,0.9)',
+                customClass: {
+                    popup: 'swal2-popup-custom'
+                }
             });
         }
 
-        // ============================================================
-        // DONNÉES DE DÉMONSTRATION
-        // ============================================================
+        // ==========================================
+        // API CLOUD - COMMUNICATION AVEC GAS
+        // ==========================================
+        async function callCloudAPI(action, data = null) {
+            try {
+                const payload = { action };
+                if (data) payload.data = data;
+
+                const response = await fetch(CLOUD_CONFIG.API_URL, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (!result.success) {
+                    throw new Error(result.error || 'Erreur API inconnue');
+                }
+
+                return result.data;
+            } catch (error) {
+                console.error('Erreur callCloudAPI:', error);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // TEST DE CONNEXION CLOUD
+        // ==========================================
+        async function testCloudConnection() {
+            try {
+                const response = await fetch(CLOUD_CONFIG.API_URL + '?action=init');
+                const result = await response.json();
+                return result.success === true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        // ==========================================
+        // SYNCHRONISATION DES ANNONCES
+        // ==========================================
+        async function syncAdsToCloud() {
+            try {
+                const cloudAds = await callCloudAPI('getAds');
+
+                if (cloudAds && cloudAds.length > 0) {
+                    const localAds = loadFromStorage();
+                    const merged = mergeAds(localAds, cloudAds);
+                    saveToStorage(merged);
+                    return merged;
+                }
+                return null;
+            } catch (error) {
+                console.warn('Erreur sync:', error);
+                return null;
+            }
+        }
+
+        function mergeAds(local, cloud) {
+            const localMap = {};
+            local.forEach(ad => { localMap[ad.Id] = ad; });
+
+            cloud.forEach(ad => {
+                if (localMap[ad.Id]) {
+                    localMap[ad.Id] = { ...localMap[ad.Id], ...ad };
+                } else {
+                    localMap[ad.Id] = ad;
+                }
+            });
+
+            return Object.values(localMap);
+        }
+
+        // ==========================================
+        // PUBLIER SUR LE CLOUD        // ==========================================
+        async function publishAdToCloud(ad) {
+            try {
+                const result = await callCloudAPI('addAd', ad);
+                return result;
+            } catch (error) {
+                console.error('Erreur publication cloud:', error);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // SUPPRIMER SUR LE CLOUD
+        // ==========================================
+        async function deleteAdFromCloud(adId) {
+            try {
+                const result = await callCloudAPI('deleteAd', { adId });
+                return result;
+            } catch (error) {
+                console.error('Erreur suppression cloud:', error);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // UPLOADER UNE IMAGE SUR LE CLOUD
+        // ==========================================
+        async function uploadImageToCloud(adId, imageIndex, base64Data) {
+            try {
+                const result = await callCloudAPI('uploadImage', {
+                    adId: adId,
+                    imageIndex: imageIndex,
+                    base64Data: base64Data
+                });
+                return result;
+            } catch (error) {
+                console.error('Erreur upload image:', error);
+                return null;
+            }
+        }
+
+        // ==========================================
+        // VALIDATION DES CHAMPS AVEC ICÔNE OK
+        // ==========================================
+        function validateFieldWithIcon(element, iconId) {
+            if (!element) return true;
+            const icon = document.getElementById(iconId);
+            const isValid = element.value && element.value.trim() !== '';
+
+            if (!isValid) {
+                element.classList.add('error');
+                element.classList.remove('success');
+                if (icon) {
+                    icon.classList.remove('success');
+                    icon.classList.add('error');
+                }
+                element.focus();
+            } else {
+                element.classList.remove('error');
+                element.classList.add('success');
+                if (icon) {
+                    icon.classList.remove('error');
+                    icon.classList.add('success');
+                }
+            }
+            return isValid;
+        }
+
+        function validateSelectWithIcon(element, iconId) {
+            if (!element) return true;
+            const icon = document.getElementById(iconId);
+            const isValid = element.value && element.value !== '';
+
+            if (!isValid) {
+                element.classList.add('error');
+                element.classList.remove('success');
+                if (icon) {
+                    icon.classList.remove('success');
+                    icon.classList.add('error');
+                }
+                element.focus();
+            } else {
+                element.classList.remove('error');
+                element.classList.add('success');
+                if (icon) {
+                    icon.classList.remove('error');
+                    icon.classList.add('success');
+                }
+            }
+            return isValid;
+        }
+
+        function validateField(element) {
+            if (!element) return true;
+            const isValid = element.value && element.value.trim() !== '';
+            if (!isValid) {
+                element.classList.add('error');
+                element.classList.remove('success');
+                element.focus();
+            } else {
+                element.classList.remove('error');
+                element.classList.add('success');
+            }
+            return isValid;
+        }
+
+        function validateSelect(element) {
+            if (!element) return true;
+            const isValid = element.value && element.value !== '';
+            if (!isValid) {
+                element.classList.add('error');
+                element.classList.remove('success');
+                element.focus();
+            } else {
+                element.classList.remove('error');
+                element.classList.add('success');
+            }
+            return isValid;
+        }
+
+        // ==========================================
+        // DONNÉES INITIALES
+        // ==========================================
         function getDefaultAds() {
             return [{
                 Id: "default1",
                 Titre: "iPhone 13 Pro Max 256GB",
                 Categorie: "Électronique",
                 Ville: "Casablanca",
-                Description: "Excellent état, batterie à 92%, avec chargeur et étui.",
+                Description: "Excellent état, batterie à 92%, avec chargeur et étui. Téléphone comme neuf, vendu avec sa boîte d'origine et tous les accessoires. Acheté chez Orange il y a 6 mois. Jamais tombé, écran parfait. Prix non négociable.",
                 Prix: "6500",
                 Contact: "0612345678",
-                ImageUrls: "",
+                ImageUrls: "https://via.placeholder.com/800x500/667eea/fff?text=iPhone+13+Pro+Max | https://via.placeholder.com/800x500/f4b400/fff?text=iPhone+13+Pro+Max+2 | https://via.placeholder.com/800x500/28a745/fff?text=iPhone+13+Pro+Max+3",
                 DateCreation: new Date().toISOString()
             }, {
                 Id: "default2",
                 Titre: "Appartement 2 pièces à vendre",
                 Categorie: "Immobilier",
                 Ville: "Rabat",
-                Description: "Appartement lumineux, proche du tramway, 65m².",
+                Description: "Appartement lumineux, proche du tramway, 65m², cuisine équipée. Situation idéale à Rabat, proche de toutes les commodités. Immeuble récent avec ascenseur. Balcon orienté sud. Parfait pour un couple ou un étudiant. Visite possible sur rendez-vous.",
                 Prix: "450000",
                 Contact: "0654321098",
-                ImageUrls: "",
+                ImageUrls: "https://via.placeholder.com/800x500/28a745/fff?text=Appartement | https://via.placeholder.com/800x500/17a2b8/fff?text=Appartement+2",
                 DateCreation: new Date(Date.now() - 86400000).toISOString()
+            }, {
+                Id: "default3",
+                Titre: "Peugeot 208 2022",
+                Categorie: "Véhicules",
+                Ville: "Marrakech",
+                Description: "Peugeot 208 essence, 15 000 km, première main, garantie. Voiture en parfait état, révisée chez Peugeot. Boîte automatique, clim, GPS, sièges en cuir. Très économique, consommation 5L/100km. Prix négociable selon visite.",
+                Prix: "145000",
+                Contact: "0678912345",
+                ImageUrls: "https://via.placeholder.com/800x500/f4b400/fff?text=Peugeot+208 | https://via.placeholder.com/800x500/dc3545/fff?text=Peugeot+208+2",
+                DateCreation: new Date(Date.now() - 172800000).toISOString()
+            }, {
+                Id: "default4",
+                Titre: "Canapé en cuir 3 places",
+                Categorie: "Meubles",
+                Ville: "Tanger",
+                Description: "Canapé en cuir noir, comme neuf, livraison possible. Modèle contemporain avec 3 places, très confortable. Cuir de qualité supérieure, facile à entretenir. Acheté chez Ikea il y a 1 an. Parfait état, aucun signe d'usure.",
+                Prix: "3200",
+                Contact: "0611122233",
+                ImageUrls: "https://via.placeholder.com/800x500/dc3545/fff?text=Canapé",
+                DateCreation: new Date(Date.now() - 259200000).toISOString()
+            }, {
+                Id: "default5",
+                Titre: "Cours de soutien en mathématiques",
+                Categorie: "Services",
+                Ville: "Fès",
+                Description: "Professeur expérimenté donne cours de maths du collège au lycée. Plus de 10 ans d'expérience dans l'enseignement. Méthode pédagogique adaptée à chaque élève. Préparation aux examens et soutien scolaire. Cours à domicile ou en ligne selon votre préférence.",
+                Prix: "200",
+                Contact: "0644556677",
+                ImageUrls: "https://via.placeholder.com/800x500/17a2b8/fff?text=Cours",
+                DateCreation: new Date(Date.now() - 345600000).toISOString()
             }];
         }
 
-        // ============================================================
+        // ==========================================
         // STOCKAGE LOCAL
-        // ============================================================
+        // ==========================================
         function loadFromStorage() {
             try {
                 const data = localStorage.getItem(STORAGE_KEY);
                 if (data) {
                     const parsed = JSON.parse(data);
                     if (Array.isArray(parsed) && parsed.length > 0) {
-                        return parsed;
+                        const clean = parsed.filter(ad => ad && ad.Id && ad.Titre);
+                        if (clean.length !== parsed.length) {
+                            saveToStorage(clean);
+                        }
+                        return clean;
                     }
                 }
             } catch (e) {
@@ -1624,51 +3008,16 @@
 
         function saveToStorage(ads) {
             try {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(ads));
+                const clean = ads.filter(ad => ad && ad.Id && ad.Titre);
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
             } catch (e) {
                 console.warn('Erreur sauvegarde localStorage:', e);
             }
         }
 
-        // ============================================================
-        // CONNEXION À GOOGLE SHEETS VIA APPS SCRIPT
-        // ============================================================
-        async function syncWithGoogleSheets() {
-            try {
-                const response = await fetch(`${APPS_SCRIPT_URL}?action=getAds&t=${Date.now()}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json'
-                    },
-                    mode: 'cors'
-                });
-
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-
-                const result = await response.json();
-
-                if (result.success && result.data && result.data.length > 0) {
-                    isOnline = true;
-                    return result.data;
-                } else if (result.success && result.data && result.data.length === 0) {
-                    isOnline = true;
-                    return [];
-                } else {
-                    isOnline = false;
-                    return null;
-                }
-            } catch (error) {
-                console.warn('Erreur de synchronisation avec Google Sheets:', error);
-                isOnline = false;
-                return null;
-            }
-        }
-
-        // ============================================================
+        // ==========================================
         // LANDING PAGE
-        // ============================================================
+        // ==========================================
         function enterSite() {
             const landing = document.getElementById('landing-page');
             landing.classList.add('hide');
@@ -1679,70 +3028,32 @@
             loadAds();
         }
 
-        // ============================================================
+        // ==========================================
         // CHARGEMENT DES ANNONCES
-        // ============================================================
+        // ==========================================
         async function loadAds() {
-            const container = document.getElementById('ads-container');
-            container.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Connexion à Google Sheets...</div>';
+            // Tester la connexion cloud
+            cloudConnected = await testCloudConnection();
 
-            try {
-                const googleAds = await syncWithGoogleSheets();
-
-                if (googleAds !== null && googleAds.length > 0) {
-                    // Données Google Sheets récupérées avec succès
-                    allAds = googleAds;
-                    adminAllAds = [...allAds];
-                    saveToStorage(allAds);
-                    showMainView();
-                    displayAds(allAds);
-                    await showSuccessAlert('✅ Données synchronisées avec Google Sheets !');
-                } else if (googleAds !== null && googleAds.length === 0) {
-                    // Google Sheets retourne une liste vide
-                    allAds = loadFromStorage();
-                    adminAllAds = [...allAds];
-                    showMainView();
-                    if (allAds.length === 0) {
-                        const defaults = getDefaultAds();
-                        saveToStorage(defaults);
-                        allAds = defaults;
-                        adminAllAds = [...allAds];
-                    }
-                    displayAds(allAds);
-                    await showInfoAlert('📋 Aucune annonce sur Google Sheets. Annonces locales chargées.');
-                } else {
-                    // Erreur de connexion ou Google Sheets inaccessible
-                    allAds = loadFromStorage();
-                    adminAllAds = [...allAds];
-                    showMainView();
-                    if (allAds.length === 0) {
-                        const defaults = getDefaultAds();
-                        saveToStorage(defaults);
-                        allAds = defaults;
-                        adminAllAds = [...allAds];
-                    }
-                    displayAds(allAds);
-                    await showInfoAlert('📱 Mode hors-ligne - Données locales chargées.');
-                }
-            } catch (error) {
-                console.error('Erreur lors du chargement:', error);
-                allAds = loadFromStorage();
-                adminAllAds = [...allAds];
-                showMainView();
-                if (allAds.length === 0) {
-                    const defaults = getDefaultAds();
-                    saveToStorage(defaults);
-                    allAds = defaults;
-                    adminAllAds = [...allAds];
-                }
-                displayAds(allAds);
-                await showInfoAlert('📱 Mode hors-ligne - Données locales chargées.');
+            const statusBadge = document.getElementById('cloud-status');
+            if (cloudConnected) {
+                statusBadge.innerHTML = '<i class="fas fa-cloud"></i> Cloud';
+                statusBadge.className = 'cloud-badge';
+                // Synchroniser les annonces
+                await syncAdsToCloud();
+            } else {
+                statusBadge.innerHTML = '<i class="fas fa-cloud-off"></i> Hors ligne';
+                statusBadge.className = 'cloud-badge offline';
             }
+
+            allAds = loadFromStorage();
+            adminAllAds = [...allAds];
+            showMainView();
         }
 
-        // ============================================================
+        // ==========================================
         // NAVIGATION
-        // ============================================================
+        // ==========================================
         function showMainView() {
             document.getElementById('main-view').classList.remove('hidden');
             document.getElementById('ads-view').classList.remove('active');
@@ -1750,18 +3061,27 @@
 
         function showAdsView(title, filteredAds) {
             document.getElementById('main-view').classList.add('hidden');
-            document.getElementById('ads-view').classList.add('active');
+            const view = document.getElementById('ads-view');
+            view.classList.add('active');
 
             const cat = document.getElementById('filter-category').value;
             const icon = categoryIcons[cat] || '📋';
             document.getElementById('category-icon').textContent = icon;
 
             document.getElementById('ads-view-title').textContent = title;
-            document.getElementById('ads-subtitle').textContent = `${filteredAds.length} annonces disponibles`;
+
+            const subtitle = document.getElementById('ads-subtitle');
+            if (cat) {
+                subtitle.textContent = `Catégorie ${cat} - ${filteredAds.length} annonces disponibles`;
+            } else {
+                subtitle.textContent = `Toutes les annonces - ${filteredAds.length} annonces disponibles`;
+            }
+
             document.getElementById('ads-count').textContent = filteredAds.length + ' annonces';
 
             currentFilteredAds = filteredAds;
-            displayAdsInView(filteredAds);
+            currentQuickFilter = 'all';
+            applyFilterAndDisplay();
         }
 
         function goBackToCategories() {
@@ -1771,34 +3091,64 @@
             document.getElementById('filter-city').value = '';
         }
 
-        // ============================================================
+        // ==========================================
+        // FILTRES ET TRI
+        // ==========================================
+        function applyFilterAndDisplay() {
+            let ads = [...currentFilteredAds];
+
+            switch (currentQuickFilter) {
+                case 'recent':
+                    ads = ads.sort((a, b) => new Date(b.DateCreation || 0) - new Date(a.DateCreation || 0));
+                    break;
+                case 'price-low':
+                    ads = ads.sort((a, b) => parseFloat(a.Prix || 0) - parseFloat(b.Prix || 0));
+                    break;
+                case 'price-high':
+                    ads = ads.sort((a, b) => parseFloat(b.Prix || 0) - parseFloat(a.Prix || 0));
+                    break;
+                default:
+                    ads = ads.sort((a, b) => new Date(b.DateCreation || 0) - new Date(a.DateCreation || 0));
+                    break;
+            }
+
+            displayAdsInView(ads);
+            document.getElementById('filter-all-count').textContent = currentFilteredAds.length;
+        }
+
+        function applyQuickFilter(filter) {
+            currentQuickFilter = filter;
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.filter === filter);
+            });
+            applyFilterAndDisplay();
+        }
+
+        // ==========================================
         // AFFICHAGE DES ANNONCES
-        // ============================================================
-        function displayAds(ads) {
+        // ==========================================
+        function displayAdsInView(ads) {
             const container = document.getElementById('ads-container');
             container.innerHTML = '';
-            container.className = '';
+            container.className = currentViewMode === 'list' ? 'list-view' : '';
 
             const cleanAds = ads.filter(ad => ad && ad.Id && ad.Titre);
 
             if (cleanAds.length === 0) {
                 container.innerHTML = `
                     <div class="no-ads" style="grid-column:1/-1; padding:60px 20px;">
-                        <div style="font-size:3rem; margin-bottom:16px;">📭</div>
-                        <h3 style="color:#1a1a2e; margin-bottom:8px;">Aucune annonce</h3>
-                        <p style="color:#777;">Soyez le premier à publier une annonce !</p>
+                        <div style="font-size:3rem; margin-bottom:16px;">🔍</div>
+                        <h3 style="color:#1a1a2e; margin-bottom:8px;">Aucune annonce trouvée</h3>
+                        <p style="color:#777;">Essayez de modifier vos filtres ou revenez plus tard.</p>
                     </div>
                 `;
                 return;
             }
 
-            const sorted = [...cleanAds].sort((a, b) => new Date(b.DateCreation || 0) - new Date(a.DateCreation || 0));
-
-            sorted.forEach(ad => {
+            cleanAds.forEach(ad => {
                 const images = ad.ImageUrls ? ad.ImageUrls.split(' | ').filter(u => u.trim()) : [];
-                const imgUrl = images.length > 0 && images[0].startsWith('data:') ? images[0] :
-                    (images.length > 0 ? images[0] :
-                        'https://via.placeholder.com/400x300/e9ecef/666?text=Photo+non+disponible');
+                const imgUrl = images.length > 0 ? images[0] :
+                    'https://via.placeholder.com/400x300/e9ecef/666?text=Photo+non+disponible';
                 const dateCreated = ad.DateCreation ? new Date(ad.DateCreation).toLocaleDateString('fr-FR') :
                     'Date inconnue';
                 const contact = ad.Contact || '';
@@ -1834,13 +3184,21 @@
             });
         }
 
-        function displayAdsInView(ads) {
-            displayAds(ads);
+        // ==========================================
+        // CHANGEMENT DE VUE
+        // ==========================================
+        function toggleView(mode) {
+            currentViewMode = mode;
+            document.querySelectorAll('.view-options button').forEach(btn => {
+                btn.classList.toggle('active', btn.querySelector('i').className.includes(mode === 'grid' ? 'fa-th' :
+                    'fa-list'));
+            });
+            applyFilterAndDisplay();
         }
 
-        // ============================================================
+        // ==========================================
         // SÉLECTION DE CATÉGORIE
-        // ============================================================
+        // ==========================================
         function selectCategory(category) {
             document.getElementById('filter-category').value = category;
             showCategoryAds();
@@ -1867,111 +3225,215 @@
                 title = 'Toutes les annonces';
             }
 
+            currentQuickFilter = 'all';
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                chip.classList.toggle('active', chip.dataset.filter === 'all');
+            });
+
             showAdsView(title, filtered);
         }
 
-        // ============================================================
-        // MODALES - OUVERTURE/FERMETURE
-        // ============================================================
-        function openPublishModal() {
-            document.getElementById('publish-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePublishModal() {
-            document.getElementById('publish-modal').classList.remove('active');
-            document.body.style.overflow = '';
-            document.getElementById('publish-form').reset();
-        }
-
+        // ==========================================
+        // MODAL CONTACT
+        // ==========================================
         function openContactModal() {
             document.getElementById('contact-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
+
+            const fields = ['contact-name', 'contact-phone', 'contact-subject', 'contact-message'];
+            const icons = ['icon-name', 'icon-phone', 'icon-subject', 'icon-message'];
+
+            fields.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('error', 'success');
+                    el.value = '';
+                }
+            });
+
+            icons.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('error', 'success');
+                }
+            });
+
+            document.getElementById('contact-error-message').classList.remove('active');
         }
 
         function closeContactModal() {
             document.getElementById('contact-modal').classList.remove('active');
             document.body.style.overflow = '';
             document.getElementById('contact-form').reset();
+
+            ['icon-name', 'icon-phone', 'icon-subject', 'icon-message'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('error', 'success');
+            });
+
+            ['contact-name', 'contact-phone', 'contact-subject', 'contact-message'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.remove('error', 'success');
+            });
+
+            document.getElementById('contact-error-message').classList.remove('active');
         }
 
-        function openAdminLogin() {
-            document.getElementById('admin-login-modal').classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
+        function sendContactMessage() {
+            const name = document.getElementById('contact-name');
+            const phone = document.getElementById('contact-phone');
+            const subject = document.getElementById('contact-subject');
+            const message = document.getElementById('contact-message');
 
-        function closeAdminLogin() {
-            document.getElementById('admin-login-modal').classList.remove('active');
-            document.body.style.overflow = '';
-            document.getElementById('admin-password').value = '';
-        }
+            let isValid = true;
+            let firstError = null;
 
-        function openAdModal(adId) {
-            const ad = allAds.find(a => a.Id === adId);
-            if (!ad) {
-                showErrorAlert('Annonce introuvable.');
+            if (!validateFieldWithIcon(name, 'icon-name')) {
+                isValid = false;
+                if (!firstError) firstError = name;
+            }
+            if (!validateFieldWithIcon(phone, 'icon-phone')) {
+                isValid = false;
+                if (!firstError) firstError = phone;
+            }
+            if (!validateSelectWithIcon(subject, 'icon-subject')) {
+                isValid = false;
+                if (!firstError) firstError = subject;
+            }
+            if (!validateFieldWithIcon(message, 'icon-message')) {
+                isValid = false;
+                if (!firstError) firstError = message;
+            }
+
+            if (!isValid) {
+                const errorMsg = document.getElementById('contact-error-message');
+                errorMsg.classList.add('active');
+                document.getElementById('contact-error-text').textContent = 'Veuillez remplir tous les champs du formulaire.';
+
+                if (firstError) {
+                    firstError.focus();
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
                 return;
             }
 
+            document.getElementById('contact-error-message').classList.remove('active');
+
+            const phoneValue = phone.value.trim();
+            if (!phoneValue.match(/^[0-9]{10}$/)) {
+                phone.classList.add('error');
+                phone.classList.remove('success');
+                const icon = document.getElementById('icon-phone');
+                if (icon) {
+                    icon.classList.remove('success');
+                    icon.classList.add('error');
+                }
+                const errorMsg = document.getElementById('contact-error-message');
+                errorMsg.classList.add('active');
+                document.getElementById('contact-error-text').textContent = 'Veuillez entrer un numéro de téléphone valide (10 chiffres).';
+                phone.focus();
+                return;
+            }
+
+            const subjectLabels = {
+                'Question': '❓ Question',
+                'Suggestion': '💡 Suggestion',
+                'Réclamation': '⚠️ Réclamation',
+                'Autre': '📦 Autre'
+            };
+
+            const whatsappMessage = `*📩 Nouveau message depuis MarketPlace*
+
+    👤 *Nom :* ${name.value.trim()}
+    📱 *Téléphone :* ${phoneValue}
+    📋 *Objet :* ${subjectLabels[subject.value] || subject.value}
+
+    ✉️ *Message :*
+    ${message.value.trim()}
+
+    ---
+    📱 Envoyé depuis MarketPlace`;
+
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            const url = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodedMessage}`;
+
+            window.open(url, '_blank');
+
+            showThankYouAlert();
+
+            setTimeout(() => {
+                closeContactModal();
+            }, 500);
+        }
+
+        // ==========================================
+        // MODAL ANNONCE
+        // ==========================================
+        function openAdModal(adId) {
+            const ad = allAds.find(a => a.Id === adId);
+            if (!ad) return;
+
+            const modal = document.getElementById('ad-modal');
             document.getElementById('ad-modal-title').textContent = ad.Titre;
 
             const images = ad.ImageUrls ? ad.ImageUrls.split(' | ').filter(u => u.trim()) : [];
             currentCarouselImages = images;
             currentCarouselIndex = 0;
 
-            let imagesHTML = '';
+            let carouselHTML = '';
             if (images.length > 0) {
-                imagesHTML = `
-                    <div style="position:relative; overflow:hidden; border-radius:16px; background:#1a1a2e; margin-bottom:16px;">
-                        <div id="carousel-images" style="display:flex; transition:transform 0.5s ease;">
-                            ${images.map(url => `<img src="${url}" style="width:100%; flex-shrink:0; max-height:400px; object-fit:cover;" onerror="this.style.display='none'">`).join('')}
+                carouselHTML = `
+                    <div class="carousel">
+                        <div class="carousel-images" id="carousel-images">
+                            ${images.map(url => `<img src="${url}" alt="Image" onerror="this.style.display='none'">`).join('')}
                         </div>
                         ${images.length > 1 ? `
-                            <button onclick="changeCarousel(-1)" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.3); border:none; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2rem;">‹</button>
-                            <button onclick="changeCarousel(1)" style="position:absolute; right:12px; top:50%; transform:translateY(-50%); background:rgba(255,255,255,0.3); border:none; color:white; width:40px; height:40px; border-radius:50%; cursor:pointer; font-size:1.2rem;">›</button>
-                            <div style="position:absolute; bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:8px;">
-                                ${images.map((_, i) => `<span onclick="goToCarousel(${i})" style="width:10px; height:10px; border-radius:50%; background:${i===0?'#f4b400':'rgba(255,255,255,0.4)'}; cursor:pointer;"></span>`).join('')}
+                            <button class="carousel-btn prev" onclick="changeCarousel(-1)"><i class="fas fa-chevron-left"></i></button>
+                            <button class="carousel-btn next" onclick="changeCarousel(1)"><i class="fas fa-chevron-right"></i></button>
+                            <div class="carousel-dots" id="carousel-dots">
+                                ${images.map((_, i) => `<span class="${i === 0 ? 'active' : ''}" onclick="goToCarousel(${i})"></span>`).join('')}
                             </div>
                         ` : ''}
                     </div>
                 `;
             } else {
-                imagesHTML = `
-                    <div style="background:#2c3e50; border-radius:16px; padding:40px; text-align:center; color:rgba(255,255,255,0.5); margin-bottom:16px;">
-                        <i class="fas fa-image" style="font-size:3rem; display:block; margin-bottom:12px;"></i>
-                        <span>Aucune image</span>
+                carouselHTML = `
+                    <div class="carousel">
+                        <div class="carousel-no-image">
+                            <i class="fas fa-image"></i>
+                            <span>Aucune image</span>
+                        </div>
                     </div>
                 `;
             }
 
             const body = document.getElementById('ad-modal-body');
             body.innerHTML = `
-                ${imagesHTML}
-                <div class="ad-detail-price">
-                    <i class="fas fa-tag"></i> ${ad.Prix || 'Négociable'} DH
+                ${carouselHTML}
+                <div class="price"><i class="fas fa-tag"></i> ${ad.Prix || 'Négociable'} DH</div>
+                <div class="info-grid">
+                    <div class="info-item"><i class="fas fa-map-marker-alt"></i> <strong>Ville :</strong> ${ad.Ville}</div>
+                    <div class="info-item"><i class="fas fa-tag"></i> <strong>Catégorie :</strong> ${ad.Categorie}</div>
+                    ${ad.Contact ? `<div class="info-item"><i class="fas fa-phone"></i> <strong>Contact :</strong> ${ad.Contact}</div>` : ''}
+                    <div class="info-item"><i class="far fa-calendar-alt"></i> <strong>Publié le :</strong> ${new Date(ad.DateCreation || Date.now()).toLocaleDateString('fr-FR')}</div>
                 </div>
-                <div class="ad-detail-grid">
-                    <div><i class="fas fa-map-marker-alt" style="color:#f4b400; width:20px;"></i> <strong>Ville :</strong> ${ad.Ville}</div>
-                    <div><i class="fas fa-tag" style="color:#f4b400; width:20px;"></i> <strong>Catégorie :</strong> ${ad.Categorie}</div>
-                    ${ad.Contact ? `<div><i class="fas fa-phone" style="color:#f4b400; width:20px;"></i> <strong>Contact :</strong> ${ad.Contact}</div>` : ''}
-                    <div><i class="far fa-calendar-alt" style="color:#f4b400; width:20px;"></i> <strong>Publié le :</strong> ${new Date(ad.DateCreation || Date.now()).toLocaleDateString('fr-FR')}</div>
-                </div>
-                <div class="ad-detail-description">
+                <div class="description">
                     <strong><i class="fas fa-align-left"></i> Description</strong>
-                    <p style="margin-top:8px;">${ad.Description || 'Aucune description'}</p>
+                    ${ad.Description || 'Aucune description'}
                 </div>
             `;
 
             const footer = document.getElementById('ad-modal-footer');
             const contact = ad.Contact || '';
             footer.innerHTML = `
-                ${contact ? `<a href="tel:${contact}" class="btn btn-call" style="flex:1; justify-content:center;"><i class="fas fa-phone"></i> Appeler</a>` : ''}
-                ${contact ? `<a href="https://wa.me/${contact.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-whatsapp" style="flex:1; justify-content:center;"><i class="fab fa-whatsapp"></i> WhatsApp</a>` : ''}
-                <button class="btn btn-secondary" onclick="closeAdModal()" style="flex:1; justify-content:center;"><i class="fas fa-times"></i> Fermer</button>
+                ${contact ? `<a href="tel:${contact}" class="btn btn-call"><i class="fas fa-phone"></i> Appeler</a>` : ''}
+                ${contact ? `<a href="https://wa.me/${contact.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>` : ''}
+                <button class="btn btn-secondary" onclick="closeAdModal()"><i class="fas fa-times"></i> Fermer</button>
             `;
 
-            document.getElementById('ad-modal').classList.add('active');
+            modal.classList.add('active');
             document.body.style.overflow = 'hidden';
+            updateCarouselDots();
         }
 
         function closeAdModal() {
@@ -1979,9 +3441,9 @@
             document.body.style.overflow = '';
         }
 
-        // ============================================================
+        // ==========================================
         // CAROUSEL
-        // ============================================================
+        // ==========================================
         function changeCarousel(direction) {
             if (currentCarouselImages.length <= 1) return;
             currentCarouselIndex = (currentCarouselIndex + direction + currentCarouselImages.length) % currentCarouselImages.length;
@@ -1999,188 +3461,131 @@
             if (container) {
                 container.style.transform = `translateX(-${currentCarouselIndex * 100}%)`;
             }
-            const dots = document.querySelectorAll('#ad-modal-body .carousel-dots span');
+            updateCarouselDots();
+        }
+
+        function updateCarouselDots() {
+            const dots = document.querySelectorAll('#carousel-dots span');
             dots.forEach((dot, i) => {
-                dot.style.background = i === currentCarouselIndex ? '#f4b400' : 'rgba(255,255,255,0.4)';
+                dot.classList.toggle('active', i === currentCarouselIndex);
             });
         }
 
-        // ============================================================
-        // ENVOI CONTACT
-        // ============================================================
-        function sendContactMessage() {
-            const name = document.getElementById('contact-name').value.trim();
-            const phone = document.getElementById('contact-phone').value.trim();
-            const subject = document.getElementById('contact-subject').value;
-            const message = document.getElementById('contact-message').value.trim();
-
-            if (!name || !phone || !subject || !message) {
-                showWarningAlert('Veuillez remplir tous les champs du formulaire.');
-                return;
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeAdModal();
+                closePublishModal();
+                closeAdminLogin();
+                closeContactModal();
             }
+        });
 
-            if (!phone.match(/^[0-9]{10}$/)) {
-                showWarningAlert('Veuillez entrer un numéro de téléphone valide (10 chiffres).');
-                return;
-            }
-
-            const subjectLabels = {
-                'Question': '❓ Question',
-                'Suggestion': '💡 Suggestion',
-                'Réclamation': '⚠️ Réclamation',
-                'Autre': '📦 Autre'
-            };
-
-            const whatsappMessage = `*📩 Nouveau message depuis MarketPlace*
-
-👤 *Nom :* ${name}
-📱 *Téléphone :* ${phone}
-📋 *Objet :* ${subjectLabels[subject] || subject}
-
-✉️ *Message :*
-${message}
-
----
-📱 Envoyé depuis MarketPlace`;
-
-            const encodedMessage = encodeURIComponent(whatsappMessage);
-            const url = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodedMessage}`;
-
-            window.open(url, '_blank');
-            showSuccessAlert('Votre message a été envoyé via WhatsApp.');
-            closeContactModal();
-        }
-
-        // ============================================================
-        // PUBLICATION ANNONCE
-        // ============================================================
+        // ==========================================
+        // PUBLICATION AVEC CLOUD
+        // ==========================================
         async function submitAd(form) {
+            const titre = document.getElementById('pub-titre');
+            const categorie = document.getElementById('pub-categorie');
+            const ville = document.getElementById('pub-ville');
+            const description = document.getElementById('pub-description');
+            const prix = document.getElementById('pub-prix');
+            const contact = document.getElementById('pub-contact');
+
+            let isValid = true;
+            if (!validateField(titre)) isValid = false;
+            if (!validateSelect(categorie)) isValid = false;
+            if (!validateSelect(ville)) isValid = false;
+            if (!validateField(description)) isValid = false;
+            if (!validateField(prix)) isValid = false;
+            if (!validateField(contact)) isValid = false;
+
+            if (!isValid) {
+                showWarningAlert('Veuillez remplir tous les champs obligatoires.');
+                return;
+            }
+
             const formData = new FormData(form);
+            const adId = 'ad_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+
             const newAd = {
+                Id: adId,
                 Titre: formData.get('titre'),
                 Categorie: formData.get('categorie'),
                 Ville: formData.get('ville'),
                 Description: formData.get('description'),
                 Prix: formData.get('prix'),
                 Contact: formData.get('contact'),
-                images: []
+                ImageUrls: '',
+                DateCreation: new Date().toISOString()
             };
 
-            const submitBtn = form.querySelector('button[type="submit"]');
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Publication...';
-            }
+            const submitBtn = document.querySelector('#publish-modal .btn-primary[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
 
-            // Traitement des images avec compression
+            // Upload des images sur le cloud si connecté
             const inputs = form.querySelectorAll('input[type="file"]');
-            for (let inp of inputs) {
-                if (inp.files.length > 0) {
-                    const file = inp.files[0];
-                    try {
-                        let imageData;
+            const imageUrls = [];
+            let imageIndex = 0;
+
+            if (cloudConnected) {
+                for (let inp of inputs) {
+                    if (inp.files.length > 0) {
+                        const file = inp.files[0];
                         if (file.size > 2 * 1024 * 1024) {
-                            await showWarningAlert(`${file.name} dépasse 2 Mo. Compression en cours...`);
-                            imageData = await compressImage(file);
-                        } else {
-                            imageData = await fileToBase64(file);
+                            await showWarningAlert(`${file.name} dépasse 2 Mo. Elle sera ignorée.`);
+                            continue;
                         }
-                        if (imageData) {
-                            newAd.images.push(imageData);
-                        }
-                    } catch (err) {
-                        console.error('Erreur traitement image:', err);
+                        try {
+                            const base64 = await fileToBase64(file);
+                            const uploadResult = await uploadImageToCloud(adId, imageIndex, base64);
+                            if (uploadResult && uploadResult.success) {
+                                imageUrls.push(uploadResult.webViewLink);
+                            }
+                            imageIndex++;
+                        } catch (err) { console.error(err); }
+                    }
+                }
+            } else {
+                // Mode hors ligne - stockage local des images en base64
+                for (let inp of inputs) {
+                    if (inp.files.length > 0) {
+                        const file = inp.files[0];
+                        try {
+                            const base64 = await fileToBase64(file);
+                            imageUrls.push(base64);
+                        } catch (err) { console.error(err); }
                     }
                 }
             }
+            newAd.ImageUrls = imageUrls.join(' | ');
 
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'addAd', ...newAd })
-                });
+            // Sauvegarder localement
+            allAds = allAds.filter(ad => ad && ad.Id && ad.Titre);
+            allAds.push(newAd);
+            adminAllAds = [...allAds];
+            saveToStorage(allAds);
 
-                const result = await response.json();
-
-                if (result.success) {
-                    await showSuccessAlert('✅ Annonce publiée avec succès !');
-                    await refreshAds();
-                    form.reset();
-                    closePublishModal();
-                } else {
-                    await showErrorAlert('❌ ' + (result.message || 'Erreur inconnue'));
+            // Publier sur le cloud si connecté
+            if (cloudConnected) {
+                try {
+                    await publishAdToCloud(newAd);
+                    await showSuccessAlert('Votre annonce a été publiée avec succès sur le cloud !');
+                } catch (error) {
+                    await showWarningAlert('Annonce publiée localement mais erreur de synchronisation cloud.');
                 }
-            } catch (error) {
-                console.error('Erreur de publication:', error);
-                // Sauvegarde locale en cas d'erreur
-                const localAd = {
-                    Id: 'ad_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-                    Titre: newAd.Titre,
-                    Categorie: newAd.Categorie,
-                    Ville: newAd.Ville,
-                    Description: newAd.Description,
-                    Prix: newAd.Prix,
-                    Contact: newAd.Contact,
-                    ImageUrls: newAd.images.join(' | '),
-                    DateCreation: new Date().toISOString()
-                };
-                allAds.push(localAd);
-                adminAllAds = [...allAds];
-                saveToStorage(allAds);
-                displayAds(allAds);
-                await showWarningAlert('📱 Annonce sauvegardée localement.');
-                form.reset();
-                closePublishModal();
+            } else {
+                await showSuccessAlert('Votre annonce a été publiée localement (mode hors ligne).');
             }
 
-            if (submitBtn) {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Publier';
+            form.reset();
+            closePublishModal();
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Publier l\'annonce';
+
+            if (document.getElementById('ads-view').classList.contains('active')) {
+                showCategoryAds();
             }
-        }
-
-        // ============================================================
-        // COMPRESSION D'IMAGE
-        // ============================================================
-        function compressImage(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = (event) => {
-                    const img = new Image();
-                    img.src = event.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxSize = 1024;
-
-                        if (width > height) {
-                            if (width > maxSize) {
-                                height = Math.round((height * maxSize) / width);
-                                width = maxSize;
-                            }
-                        } else {
-                            if (height > maxSize) {
-                                width = Math.round((width * maxSize) / height);
-                                height = maxSize;
-                            }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const quality = 0.8;
-                        const mimeType = file.type || 'image/jpeg';
-                        resolve(canvas.toDataURL(mimeType, quality));
-                    };
-                    img.onerror = reject;
-                };
-                reader.onerror = reject;
-            });
         }
 
         function fileToBase64(file) {
@@ -2192,29 +3597,50 @@ ${message}
             });
         }
 
-        // ============================================================
-        // RAFRAÎCHISSEMENT DES ANNONCES
-        // ============================================================
-        async function refreshAds() {
-            try {
-                const googleAds = await syncWithGoogleSheets();
-                if (googleAds) {
-                    allAds = googleAds;
-                    adminAllAds = [...allAds];
-                    displayAds(allAds);
-                    saveToStorage(allAds);
-                }
-            } catch (error) {
-                console.error('Erreur rafraîchissement:', error);
-            }
+        // ==========================================
+        // GESTION MODALS
+        // ==========================================
+        function openPublishModal() {
+            document.getElementById('publish-modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.querySelectorAll('#publish-form .error, #publish-form .success').forEach(el => {
+                el.classList.remove('error');
+                el.classList.remove('success');
+            });
         }
 
-        // ============================================================
-        // ADMIN
-        // ============================================================
+        function closePublishModal() {
+            document.getElementById('publish-modal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.querySelectorAll('#publish-form .error, #publish-form .success').forEach(el => {
+                el.classList.remove('error');
+                el.classList.remove('success');
+            });
+        }
+
+        function openAdminLogin() {
+            document.getElementById('admin-login-modal').classList.add('active');
+            document.querySelector('#admin-login-modal .error')?.classList.remove('error');
+        }
+
+        function closeAdminLogin() {
+            document.getElementById('admin-login-modal').classList.remove('active');
+            document.getElementById('admin-password').value = '';
+            document.querySelector('#admin-login-modal .error')?.classList.remove('error');
+        }
+
         function loginAdmin() {
-            const pwd = document.getElementById('admin-password').value;
+            const pwdInput = document.getElementById('admin-password');
+            const pwd = pwdInput.value;
+
+            if (!pwd || pwd.trim() === '') {
+                pwdInput.classList.add('error');
+                showWarningAlert('Veuillez entrer le mot de passe.');
+                return;
+            }
+
             if (pwd === ADMIN_PASSWORD) {
+                pwdInput.classList.remove('error');
                 closeAdminLogin();
                 document.getElementById('main-view').style.display = 'none';
                 document.getElementById('ads-view').classList.remove('active');
@@ -2223,6 +3649,7 @@ ${message}
                 loadAdminAds();
                 showSuccessAlert('Bienvenue dans le panneau d\'administration.');
             } else {
+                pwdInput.classList.add('error');
                 showErrorAlert('Mot de passe incorrect.');
             }
         }
@@ -2233,6 +3660,13 @@ ${message}
             showMainView();
         }
 
+        function showMain() {
+            closeAdmin();
+        }
+
+        // ==========================================
+        // ADMIN AVEC FILTRES
+        // ==========================================
         function loadAdminAds() {
             adminAllAds = [...allAds];
             applyAdminFilters();
@@ -2251,8 +3685,9 @@ ${message}
                 filtered = filtered.filter(ad => ad.Ville === cityFilter);
             }
 
-            displayAdminAds(filtered);
-            document.getElementById('admin-total-count').textContent = filtered.length;
+            adminFilteredAds = filtered;
+            displayAdminAds(adminFilteredAds);
+            updateAdminStats(adminFilteredAds);
         }
 
         function resetAdminFilters() {
@@ -2261,15 +3696,36 @@ ${message}
             applyAdminFilters();
         }
 
+        function sortAdminByDate() {
+            const sorted = [...adminFilteredAds].sort((a, b) =>
+                new Date(b.DateCreation || 0) - new Date(a.DateCreation || 0)
+            );
+            displayAdminAds(sorted);
+        }
+
+        function sortAdminByPrice() {
+            const sorted = [...adminFilteredAds].sort((a, b) =>
+                parseFloat(a.Prix || 0) - parseFloat(b.Prix || 0)
+            );
+            displayAdminAds(sorted);
+        }
+
+        function updateAdminStats(ads) {
+            document.getElementById('admin-total-count').textContent = ads.length;
+
+            const categories = new Set(ads.map(ad => ad.Categorie).filter(Boolean));
+            document.getElementById('admin-cat-count').textContent = categories.size;
+        }
+
         function displayAdminAds(ads) {
             const container = document.getElementById('admin-ads-container');
 
             if (!ads || ads.length === 0) {
                 container.innerHTML = `
-                    <div class="admin-empty" style="text-align:center; padding:60px 20px; color:#999;">
-                        <i class="fas fa-inbox" style="font-size:3rem; margin-bottom:16px; opacity:0.3;"></i>
-                        <h3 style="color:#555; margin-bottom:8px;">Aucune annonce trouvée</h3>
-                        <p>Aucune annonce ne correspond à vos critères.</p>
+                    <div class="admin-empty">
+                        <i class="fas fa-inbox"></i>
+                        <h3>Aucune annonce trouvée</h3>
+                        <p>Aucune annonce ne correspond à vos critères de filtrage.</p>
                     </div>
                 `;
                 return;
@@ -2277,7 +3733,13 @@ ${message}
 
             container.innerHTML = ads.map(ad => {
                 const contact = ad.Contact || '';
-                const dateCreated = ad.DateCreation ? new Date(ad.DateCreation).toLocaleDateString('fr-FR') : 'Date inconnue';
+                const dateCreated = ad.DateCreation ? new Date(ad.DateCreation).toLocaleDateString('fr-FR', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                }) : 'Date inconnue';
 
                 return `
                     <div class="admin-ad-item">
@@ -2288,7 +3750,7 @@ ${message}
                                 <span><i class="fas fa-map-marker-alt"></i> ${ad.Ville || 'Sans ville'}</span>
                                 <span><i class="fas fa-money-bill-wave"></i> ${ad.Prix || 'Négociable'} DH</span>
                                 <span><i class="fas fa-phone"></i> ${contact || 'Pas de contact'}</span>
-                                <span><i class="far fa-calendar-alt"></i> ${dateCreated}</span>
+                                <span class="date"><i class="far fa-calendar-alt"></i> ${dateCreated}</span>
                             </div>
                         </div>
                         <div class="actions">
@@ -2301,6 +3763,9 @@ ${message}
             }).join('');
         }
 
+        // ==========================================
+        // ADMIN - SUPPRESSION AVEC CLOUD
+        // ==========================================
         async function deleteAd(adId) {
             const confirm = await Swal.fire({
                 title: '⚠️ Supprimer cette annonce ?',
@@ -2315,50 +3780,72 @@ ${message}
 
             if (!confirm.isConfirmed) return;
 
-            // Supprimer localement
             allAds = allAds.filter(ad => ad && ad.Id !== adId);
             adminAllAds = [...allAds];
             saveToStorage(allAds);
 
-            // Supprimer sur Google Sheets
-            try {
-                const response = await fetch(APPS_SCRIPT_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                    body: JSON.stringify({ action: 'deleteAd', id: adId })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    await showSuccessAlert('🗑️ Annonce supprimée de Google Sheets !');
+            // Supprimer sur le cloud si connecté
+            if (cloudConnected) {
+                try {
+                    await deleteAdFromCloud(adId);
+                } catch (error) {
+                    console.warn('Erreur suppression cloud:', error);
                 }
-            } catch (error) {
-                console.warn('Erreur de suppression sur Google Sheets:', error);
-                await showWarningAlert('🗑️ Annonce supprimée localement.');
             }
 
             loadAdminAds();
-            displayAds(allAds);
+
+            if (document.getElementById('ads-view').classList.contains('active')) {
+                showCategoryAds();
+            }
+
+            await showSuccessAlert('L\'annonce a été supprimée avec succès.');
         }
 
-        // ============================================================
-        // FERMETURE DES MODALES AU CLIC EXTÉRIEUR
-        // ============================================================
+        // Fermer les modals au clic extérieur
         document.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
-                e.target.classList.remove('active');
-                document.body.style.overflow = '';
+            if (e.target.classList.contains('publish-modal')) {
+                closePublishModal();
+            }
+            if (e.target.classList.contains('ad-modal')) {
+                closeAdModal();
+            }
+            if (e.target.classList.contains('login-modal')) {
+                closeAdminLogin();
+            }
+            if (e.target.classList.contains('contact-modal') && e.target === document.getElementById('contact-modal')) {
+                closeContactModal();
             }
         });
 
-        // ============================================================
-        // FERMETURE AVEC ÉCHAP
-        // ============================================================
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('.modal-overlay.active').forEach(modal => {
-                    modal.classList.remove('active');
-                });
-                document.body.style.overflow = '';
+        // Supprimer les classes error/success au focus
+        document.addEventListener('focusin', (e) => {
+            if (e.target.classList) {
+                e.target.classList.remove('error');
+                e.target.classList.remove('success');
+                const errorMsg = document.getElementById('contact-error-message');
+                if (errorMsg) {
+                    errorMsg.classList.remove('active');
+                }
+                const iconId = e.target.id.replace('contact-', 'icon-');
+                const icon = document.getElementById(iconId);
+                if (icon) {
+                    icon.classList.remove('error', 'success');
+                }
+            }
+        });
+
+        document.addEventListener('input', (e) => {
+            if (e.target.id && e.target.id.startsWith('contact-')) {
+                const iconId = e.target.id.replace('contact-', 'icon-');
+                const icon = document.getElementById(iconId);
+                if (icon) {
+                    icon.classList.remove('error', 'success');
+                }
+                const errorMsg = document.getElementById('contact-error-message');
+                if (errorMsg) {
+                    errorMsg.classList.remove('active');
+                }
             }
         });
     </script>
