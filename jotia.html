@@ -2619,14 +2619,13 @@
     </div>
 
     <!-- ========================================== -->
-    <!-- JAVASCRIPT                                 -->
+    <!-- JAVASCRIPT - UNIQUEMENT CLOUD             -->
     <!-- ========================================== -->
     <script>
         // ==========================================
         // CONFIGURATION
         // ==========================================
         const ADMIN_PASSWORD = "Seddik";
-        const STORAGE_KEY = 'marketplace_ads';
         const WHATSAPP_ADMIN = "212608975435";
 
         // ==========================================
@@ -2634,8 +2633,8 @@
         // ==========================================
         const CLOUD_CONFIG = {
             // ⚠️ REMPLACEZ AVEC L'URL DE VOTRE SCRIPT GAS
-            API_URL: 'https://script.google.com/macros/s/AKfycbwOV5FKco5JoWD5D4JBvn-JkYal-_NrCWQtTsi4dmhOeREPkydL_B9RK_e9voPSWyyh/exec',
-            USE_GET: false // Utiliser GET ou POST
+            API_URL: 'https://script.google.com/macros/s/AKfycbyMBygO0gIrvi2B5GY0r5l7qLlVJiAJqPCI3uu_2kyn-Oeb0AR2H2m9MeU0hIwpAI4/exec',
+            USE_GET: false
         };
 
         let allAds = [];
@@ -2675,7 +2674,7 @@
         };
 
         // ==========================================
-        // FONCTIONS UTILITAIRES POUR LES ALERTES
+        // FONCTIONS UTILITAIRES
         // ==========================================
         function showErrorAlert(message) {
             return Swal.fire({
@@ -2727,7 +2726,7 @@
         }
 
         // ==========================================
-        // API CLOUD - COMMUNICATION AVEC GAS
+        // API CLOUD - UNIQUEMENT
         // ==========================================
         async function callCloudAPI(action, data = null) {
             try {
@@ -2743,6 +2742,10 @@
                     body: JSON.stringify(payload)
                 });
 
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
                 const result = await response.json();
 
                 if (!result.success) {
@@ -2751,8 +2754,8 @@
 
                 return result.data;
             } catch (error) {
-                console.error('Erreur callCloudAPI:', error);
-                return null;
+                console.error('❌ Erreur callCloudAPI:', error);
+                throw error;
             }
         }
 
@@ -2761,58 +2764,53 @@
         // ==========================================
         async function testCloudConnection() {
             try {
-                const response = await fetch(CLOUD_CONFIG.API_URL + '?action=init');
+                console.log('🔍 Test de connexion au cloud...');
+                
+                const response = await fetch(CLOUD_CONFIG.API_URL + '?action=init', {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
                 const result = await response.json();
+                console.log('✅ Réponse cloud:', result);
+                
                 return result.success === true;
             } catch (error) {
+                console.error('❌ Erreur de connexion:', error);
                 return false;
             }
         }
 
         // ==========================================
-        // SYNCHRONISATION DES ANNONCES
+        // RÉCUPÉRER LES ANNONCES DU CLOUD
         // ==========================================
-        async function syncAdsToCloud() {
+        async function getAdsFromCloud() {
             try {
-                const cloudAds = await callCloudAPI('getAds');
-
-                if (cloudAds && cloudAds.length > 0) {
-                    const localAds = loadFromStorage();
-                    const merged = mergeAds(localAds, cloudAds);
-                    saveToStorage(merged);
-                    return merged;
-                }
-                return null;
+                const ads = await callCloudAPI('getAds');
+                return ads || [];
             } catch (error) {
-                console.warn('Erreur sync:', error);
-                return null;
+                console.error('❌ Erreur getAdsFromCloud:', error);
+                return [];
             }
         }
 
-        function mergeAds(local, cloud) {
-            const localMap = {};
-            local.forEach(ad => { localMap[ad.Id] = ad; });
-
-            cloud.forEach(ad => {
-                if (localMap[ad.Id]) {
-                    localMap[ad.Id] = { ...localMap[ad.Id], ...ad };
-                } else {
-                    localMap[ad.Id] = ad;
-                }
-            });
-
-            return Object.values(localMap);
-        }
-
         // ==========================================
-        // PUBLIER SUR LE CLOUD        // ==========================================
+        // PUBLIER SUR LE CLOUD
+        // ==========================================
         async function publishAdToCloud(ad) {
             try {
                 const result = await callCloudAPI('addAd', ad);
                 return result;
             } catch (error) {
-                console.error('Erreur publication cloud:', error);
-                return null;
+                console.error('❌ Erreur publication cloud:', error);
+                throw error;
             }
         }
 
@@ -2824,8 +2822,8 @@
                 const result = await callCloudAPI('deleteAd', { adId });
                 return result;
             } catch (error) {
-                console.error('Erreur suppression cloud:', error);
-                return null;
+                console.error('❌ Erreur suppression cloud:', error);
+                throw error;
             }
         }
 
@@ -2841,62 +2839,14 @@
                 });
                 return result;
             } catch (error) {
-                console.error('Erreur upload image:', error);
-                return null;
+                console.error('❌ Erreur upload image:', error);
+                throw error;
             }
         }
 
         // ==========================================
-        // VALIDATION DES CHAMPS AVEC ICÔNE OK
+        // VALIDATION DES CHAMPS
         // ==========================================
-        function validateFieldWithIcon(element, iconId) {
-            if (!element) return true;
-            const icon = document.getElementById(iconId);
-            const isValid = element.value && element.value.trim() !== '';
-
-            if (!isValid) {
-                element.classList.add('error');
-                element.classList.remove('success');
-                if (icon) {
-                    icon.classList.remove('success');
-                    icon.classList.add('error');
-                }
-                element.focus();
-            } else {
-                element.classList.remove('error');
-                element.classList.add('success');
-                if (icon) {
-                    icon.classList.remove('error');
-                    icon.classList.add('success');
-                }
-            }
-            return isValid;
-        }
-
-        function validateSelectWithIcon(element, iconId) {
-            if (!element) return true;
-            const icon = document.getElementById(iconId);
-            const isValid = element.value && element.value !== '';
-
-            if (!isValid) {
-                element.classList.add('error');
-                element.classList.remove('success');
-                if (icon) {
-                    icon.classList.remove('success');
-                    icon.classList.add('error');
-                }
-                element.focus();
-            } else {
-                element.classList.remove('error');
-                element.classList.add('success');
-                if (icon) {
-                    icon.classList.remove('error');
-                    icon.classList.add('success');
-                }
-            }
-            return isValid;
-        }
-
         function validateField(element) {
             if (!element) return true;
             const isValid = element.value && element.value.trim() !== '';
@@ -2926,96 +2876,6 @@
         }
 
         // ==========================================
-        // DONNÉES INITIALES
-        // ==========================================
-        function getDefaultAds() {
-            return [{
-                Id: "default1",
-                Titre: "iPhone 13 Pro Max 256GB",
-                Categorie: "Électronique",
-                Ville: "Casablanca",
-                Description: "Excellent état, batterie à 92%, avec chargeur et étui. Téléphone comme neuf, vendu avec sa boîte d'origine et tous les accessoires. Acheté chez Orange il y a 6 mois. Jamais tombé, écran parfait. Prix non négociable.",
-                Prix: "6500",
-                Contact: "0612345678",
-                ImageUrls: "https://via.placeholder.com/800x500/667eea/fff?text=iPhone+13+Pro+Max | https://via.placeholder.com/800x500/f4b400/fff?text=iPhone+13+Pro+Max+2 | https://via.placeholder.com/800x500/28a745/fff?text=iPhone+13+Pro+Max+3",
-                DateCreation: new Date().toISOString()
-            }, {
-                Id: "default2",
-                Titre: "Appartement 2 pièces à vendre",
-                Categorie: "Immobilier",
-                Ville: "Rabat",
-                Description: "Appartement lumineux, proche du tramway, 65m², cuisine équipée. Situation idéale à Rabat, proche de toutes les commodités. Immeuble récent avec ascenseur. Balcon orienté sud. Parfait pour un couple ou un étudiant. Visite possible sur rendez-vous.",
-                Prix: "450000",
-                Contact: "0654321098",
-                ImageUrls: "https://via.placeholder.com/800x500/28a745/fff?text=Appartement | https://via.placeholder.com/800x500/17a2b8/fff?text=Appartement+2",
-                DateCreation: new Date(Date.now() - 86400000).toISOString()
-            }, {
-                Id: "default3",
-                Titre: "Peugeot 208 2022",
-                Categorie: "Véhicules",
-                Ville: "Marrakech",
-                Description: "Peugeot 208 essence, 15 000 km, première main, garantie. Voiture en parfait état, révisée chez Peugeot. Boîte automatique, clim, GPS, sièges en cuir. Très économique, consommation 5L/100km. Prix négociable selon visite.",
-                Prix: "145000",
-                Contact: "0678912345",
-                ImageUrls: "https://via.placeholder.com/800x500/f4b400/fff?text=Peugeot+208 | https://via.placeholder.com/800x500/dc3545/fff?text=Peugeot+208+2",
-                DateCreation: new Date(Date.now() - 172800000).toISOString()
-            }, {
-                Id: "default4",
-                Titre: "Canapé en cuir 3 places",
-                Categorie: "Meubles",
-                Ville: "Tanger",
-                Description: "Canapé en cuir noir, comme neuf, livraison possible. Modèle contemporain avec 3 places, très confortable. Cuir de qualité supérieure, facile à entretenir. Acheté chez Ikea il y a 1 an. Parfait état, aucun signe d'usure.",
-                Prix: "3200",
-                Contact: "0611122233",
-                ImageUrls: "https://via.placeholder.com/800x500/dc3545/fff?text=Canapé",
-                DateCreation: new Date(Date.now() - 259200000).toISOString()
-            }, {
-                Id: "default5",
-                Titre: "Cours de soutien en mathématiques",
-                Categorie: "Services",
-                Ville: "Fès",
-                Description: "Professeur expérimenté donne cours de maths du collège au lycée. Plus de 10 ans d'expérience dans l'enseignement. Méthode pédagogique adaptée à chaque élève. Préparation aux examens et soutien scolaire. Cours à domicile ou en ligne selon votre préférence.",
-                Prix: "200",
-                Contact: "0644556677",
-                ImageUrls: "https://via.placeholder.com/800x500/17a2b8/fff?text=Cours",
-                DateCreation: new Date(Date.now() - 345600000).toISOString()
-            }];
-        }
-
-        // ==========================================
-        // STOCKAGE LOCAL
-        // ==========================================
-        function loadFromStorage() {
-            try {
-                const data = localStorage.getItem(STORAGE_KEY);
-                if (data) {
-                    const parsed = JSON.parse(data);
-                    if (Array.isArray(parsed) && parsed.length > 0) {
-                        const clean = parsed.filter(ad => ad && ad.Id && ad.Titre);
-                        if (clean.length !== parsed.length) {
-                            saveToStorage(clean);
-                        }
-                        return clean;
-                    }
-                }
-            } catch (e) {
-                console.warn('Erreur lecture localStorage:', e);
-            }
-            const defaults = getDefaultAds();
-            saveToStorage(defaults);
-            return defaults;
-        }
-
-        function saveToStorage(ads) {
-            try {
-                const clean = ads.filter(ad => ad && ad.Id && ad.Titre);
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(clean));
-            } catch (e) {
-                console.warn('Erreur sauvegarde localStorage:', e);
-            }
-        }
-
-        // ==========================================
         // LANDING PAGE
         // ==========================================
         function enterSite() {
@@ -3029,25 +2889,56 @@
         }
 
         // ==========================================
-        // CHARGEMENT DES ANNONCES
+        // CHARGEMENT DES ANNONCES - UNIQUEMENT CLOUD
         // ==========================================
         async function loadAds() {
-            // Tester la connexion cloud
-            cloudConnected = await testCloudConnection();
-
             const statusBadge = document.getElementById('cloud-status');
-            if (cloudConnected) {
-                statusBadge.innerHTML = '<i class="fas fa-cloud"></i> Cloud';
-                statusBadge.className = 'cloud-badge';
-                // Synchroniser les annonces
-                await syncAdsToCloud();
-            } else {
-                statusBadge.innerHTML = '<i class="fas fa-cloud-off"></i> Hors ligne';
+            
+            try {
+                // Test de connexion
+                cloudConnected = await testCloudConnection();
+                
+                if (cloudConnected) {
+                    statusBadge.innerHTML = '<i class="fas fa-cloud"></i> Cloud ✅';
+                    statusBadge.className = 'cloud-badge';
+                    statusBadge.style.background = 'rgba(40, 167, 69, 0.15)';
+                    statusBadge.style.color = '#28a745';
+                    statusBadge.style.borderColor = 'rgba(40, 167, 69, 0.2)';
+                    
+                    console.log('✅ Cloud connecté, chargement des données...');
+                    
+                    // Charger les annonces depuis le cloud
+                    const cloudAds = await getAdsFromCloud();
+                    allAds = cloudAds;
+                    adminAllAds = [...allAds];
+                    
+                    console.log(`📊 ${allAds.length} annonces chargées depuis le cloud`);
+                    
+                    if (allAds.length === 0) {
+                        await showWarningAlert('Aucune annonce trouvée dans la base de données.');
+                    }
+                } else {
+                    statusBadge.innerHTML = '<i class="fas fa-cloud-off"></i> Hors ligne ⚠️';
+                    statusBadge.className = 'cloud-badge offline';
+                    statusBadge.style.background = 'rgba(220, 53, 69, 0.15)';
+                    statusBadge.style.color = '#dc3545';
+                    statusBadge.style.borderColor = 'rgba(220, 53, 69, 0.2)';
+                    
+                    console.warn('⚠️ Cloud hors ligne - impossible de charger les données');
+                    await showErrorAlert('Impossible de se connecter au cloud. Vérifiez votre connexion et l\'URL du script.');
+                    
+                    allAds = [];
+                    adminAllAds = [];
+                }
+            } catch (error) {
+                console.error('❌ Erreur chargement:', error);
+                statusBadge.innerHTML = '<i class="fas fa-cloud-off"></i> Erreur ⚠️';
                 statusBadge.className = 'cloud-badge offline';
+                await showErrorAlert('Erreur de chargement des données: ' + error.message);
+                allAds = [];
+                adminAllAds = [];
             }
-
-            allAds = loadFromStorage();
-            adminAllAds = [...allAds];
+            
             showMainView();
         }
 
@@ -3234,7 +3125,7 @@
         }
 
         // ==========================================
-        // MODAL CONTACT
+        // MODAL CONTACT (inchangé)
         // ==========================================
         function openContactModal() {
             document.getElementById('contact-modal').classList.add('active');
@@ -3288,22 +3179,14 @@
             let isValid = true;
             let firstError = null;
 
-            if (!validateFieldWithIcon(name, 'icon-name')) {
-                isValid = false;
-                if (!firstError) firstError = name;
-            }
-            if (!validateFieldWithIcon(phone, 'icon-phone')) {
-                isValid = false;
-                if (!firstError) firstError = phone;
-            }
-            if (!validateSelectWithIcon(subject, 'icon-subject')) {
-                isValid = false;
-                if (!firstError) firstError = subject;
-            }
-            if (!validateFieldWithIcon(message, 'icon-message')) {
-                isValid = false;
-                if (!firstError) firstError = message;
-            }
+            if (!validateField(name)) { isValid = false;
+                if (!firstError) firstError = name; }
+            if (!validateField(phone)) { isValid = false;
+                if (!firstError) firstError = phone; }
+            if (!validateSelect(subject)) { isValid = false;
+                if (!firstError) firstError = subject; }
+            if (!validateField(message)) { isValid = false;
+                if (!firstError) firstError = message; }
 
             if (!isValid) {
                 const errorMsg = document.getElementById('contact-error-message');
@@ -3323,11 +3206,6 @@
             if (!phoneValue.match(/^[0-9]{10}$/)) {
                 phone.classList.add('error');
                 phone.classList.remove('success');
-                const icon = document.getElementById('icon-phone');
-                if (icon) {
-                    icon.classList.remove('success');
-                    icon.classList.add('error');
-                }
                 const errorMsg = document.getElementById('contact-error-message');
                 errorMsg.classList.add('active');
                 document.getElementById('contact-error-text').textContent = 'Veuillez entrer un numéro de téléphone valide (10 chiffres).';
@@ -3344,15 +3222,15 @@
 
             const whatsappMessage = `*📩 Nouveau message depuis MarketPlace*
 
-    👤 *Nom :* ${name.value.trim()}
-    📱 *Téléphone :* ${phoneValue}
-    📋 *Objet :* ${subjectLabels[subject.value] || subject.value}
+👤 *Nom :* ${name.value.trim()}
+📱 *Téléphone :* ${phoneValue}
+📋 *Objet :* ${subjectLabels[subject.value] || subject.value}
 
-    ✉️ *Message :*
-    ${message.value.trim()}
+✉️ *Message :*
+${message.value.trim()}
 
-    ---
-    📱 Envoyé depuis MarketPlace`;
+---
+📱 Envoyé depuis MarketPlace`;
 
             const encodedMessage = encodeURIComponent(whatsappMessage);
             const url = `https://wa.me/${WHATSAPP_ADMIN}?text=${encodedMessage}`;
@@ -3481,7 +3359,7 @@
         });
 
         // ==========================================
-        // PUBLICATION AVEC CLOUD
+        // PUBLICATION - UNIQUEMENT CLOUD
         // ==========================================
         async function submitAd(form) {
             const titre = document.getElementById('pub-titre');
@@ -3504,6 +3382,11 @@
                 return;
             }
 
+            if (!cloudConnected) {
+                await showErrorAlert('Impossible de publier : le cloud est hors ligne.');
+                return;
+            }
+
             const formData = new FormData(form);
             const adId = 'ad_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
 
@@ -3523,12 +3406,12 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi...';
 
-            // Upload des images sur le cloud si connecté
-            const inputs = form.querySelectorAll('input[type="file"]');
-            const imageUrls = [];
-            let imageIndex = 0;
+            try {
+                // Upload des images
+                const inputs = form.querySelectorAll('input[type="file"]');
+                const imageUrls = [];
+                let imageIndex = 0;
 
-            if (cloudConnected) {
                 for (let inp of inputs) {
                     if (inp.files.length > 0) {
                         const file = inp.files[0];
@@ -3543,49 +3426,37 @@
                                 imageUrls.push(uploadResult.webViewLink);
                             }
                             imageIndex++;
-                        } catch (err) { console.error(err); }
+                        } catch (err) { 
+                            console.error('Erreur upload image:', err);
+                            await showWarningAlert(`Erreur lors de l'upload de l'image: ${err.message}`);
+                        }
                     }
                 }
-            } else {
-                // Mode hors ligne - stockage local des images en base64
-                for (let inp of inputs) {
-                    if (inp.files.length > 0) {
-                        const file = inp.files[0];
-                        try {
-                            const base64 = await fileToBase64(file);
-                            imageUrls.push(base64);
-                        } catch (err) { console.error(err); }
-                    }
-                }
-            }
-            newAd.ImageUrls = imageUrls.join(' | ');
+                newAd.ImageUrls = imageUrls.join(' | ');
 
-            // Sauvegarder localement
-            allAds = allAds.filter(ad => ad && ad.Id && ad.Titre);
-            allAds.push(newAd);
-            adminAllAds = [...allAds];
-            saveToStorage(allAds);
-
-            // Publier sur le cloud si connecté
-            if (cloudConnected) {
-                try {
-                    await publishAdToCloud(newAd);
-                    await showSuccessAlert('Votre annonce a été publiée avec succès sur le cloud !');
-                } catch (error) {
-                    await showWarningAlert('Annonce publiée localement mais erreur de synchronisation cloud.');
+                // Publication sur le cloud
+                await publishAdToCloud(newAd);
+                
+                // Mettre à jour la liste locale
+                allAds.push(newAd);
+                adminAllAds = [...allAds];
+                
+                await showSuccessAlert('Votre annonce a été publiée avec succès sur le cloud !');
+                
+                form.reset();
+                closePublishModal();
+                
+                if (document.getElementById('ads-view').classList.contains('active')) {
+                    showCategoryAds();
                 }
-            } else {
-                await showSuccessAlert('Votre annonce a été publiée localement (mode hors ligne).');
+                
+            } catch (error) {
+                console.error('Erreur publication:', error);
+                await showErrorAlert('Erreur lors de la publication: ' + error.message);
             }
 
-            form.reset();
-            closePublishModal();
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-rocket"></i> Publier l\'annonce';
-
-            if (document.getElementById('ads-view').classList.contains('active')) {
-                showCategoryAds();
-            }
         }
 
         function fileToBase64(file) {
@@ -3658,10 +3529,6 @@
             document.getElementById('admin-panel').classList.remove('active');
             document.getElementById('main-view').style.display = 'block';
             showMainView();
-        }
-
-        function showMain() {
-            closeAdmin();
         }
 
         // ==========================================
@@ -3764,7 +3631,7 @@
         }
 
         // ==========================================
-        // ADMIN - SUPPRESSION AVEC CLOUD
+        // ADMIN - SUPPRESSION UNIQUEMENT CLOUD
         // ==========================================
         async function deleteAd(adId) {
             const confirm = await Swal.fire({
@@ -3780,26 +3647,28 @@
 
             if (!confirm.isConfirmed) return;
 
-            allAds = allAds.filter(ad => ad && ad.Id !== adId);
-            adminAllAds = [...allAds];
-            saveToStorage(allAds);
-
-            // Supprimer sur le cloud si connecté
-            if (cloudConnected) {
-                try {
-                    await deleteAdFromCloud(adId);
-                } catch (error) {
-                    console.warn('Erreur suppression cloud:', error);
+            try {
+                if (!cloudConnected) {
+                    await showErrorAlert('Impossible de supprimer : le cloud est hors ligne.');
+                    return;
                 }
+
+                await deleteAdFromCloud(adId);
+                
+                // Mettre à jour la liste locale
+                allAds = allAds.filter(ad => ad && ad.Id !== adId);
+                adminAllAds = [...allAds];
+
+                loadAdminAds();
+
+                if (document.getElementById('ads-view').classList.contains('active')) {
+                    showCategoryAds();
+                }
+
+                await showSuccessAlert('L\'annonce a été supprimée avec succès.');
+            } catch (error) {
+                await showErrorAlert('Erreur lors de la suppression: ' + error.message);
             }
-
-            loadAdminAds();
-
-            if (document.getElementById('ads-view').classList.contains('active')) {
-                showCategoryAds();
-            }
-
-            await showSuccessAlert('L\'annonce a été supprimée avec succès.');
         }
 
         // Fermer les modals au clic extérieur
@@ -3823,25 +3692,6 @@
             if (e.target.classList) {
                 e.target.classList.remove('error');
                 e.target.classList.remove('success');
-                const errorMsg = document.getElementById('contact-error-message');
-                if (errorMsg) {
-                    errorMsg.classList.remove('active');
-                }
-                const iconId = e.target.id.replace('contact-', 'icon-');
-                const icon = document.getElementById(iconId);
-                if (icon) {
-                    icon.classList.remove('error', 'success');
-                }
-            }
-        });
-
-        document.addEventListener('input', (e) => {
-            if (e.target.id && e.target.id.startsWith('contact-')) {
-                const iconId = e.target.id.replace('contact-', 'icon-');
-                const icon = document.getElementById(iconId);
-                if (icon) {
-                    icon.classList.remove('error', 'success');
-                }
                 const errorMsg = document.getElementById('contact-error-message');
                 if (errorMsg) {
                     errorMsg.classList.remove('active');
